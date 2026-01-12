@@ -1,4 +1,4 @@
-.PHONY: help setup install test lint format clean run train data docker-build k8s-deploy k8s-clean
+.PHONY: help setup install test lint format clean run train data docker-build k8s-deploy k8s-clean stop restart
 
 help: ## Show this help message
 	@echo 'Usage: make [target]'
@@ -41,18 +41,15 @@ train: ## Train model
 	@echo "🤖 Training model..."
 	@python src/train_model.py
 
-run: ## Run FastAPI UI (requires model server running)
-	@echo "🌐 Starting FastAPI UI..."
-	@echo "⚠️  Note: Model server must be running on port 8001"
-	@echo "   Run 'make run-model-server' in another terminal first"
-	@uvicorn src.app:app --reload --host 0.0.0.0 --port 8000
-
-run-model-server: ## Run model server
-	@echo "🤖 Starting model server..."
-	@MODEL_PATH=models/sentiment_model.pkl uvicorn src.model_server:app --host 0.0.0.0 --port 8001
-
-run-local: ## Run both UI and model server locally
+run: ## Start both UI and model server
 	@./scripts/run-local.sh
+
+stop: ## Stop all local servers
+	@echo "🛑 Stopping servers..."
+	@lsof -ti:8000,8001 | xargs kill -9 2>/dev/null || true
+	@echo "✅ Servers stopped"
+
+restart: stop run ## Restart servers
 
 docker-build: ## Build Docker images
 	@echo "🐳 Building Docker images..."
