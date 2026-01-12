@@ -37,7 +37,9 @@ class SentimentClassifier:
             logger.error(f"Failed to load model: {e}")
             raise
 
-    def predict(self, X: np.ndarray | list[str], features_names: list[str] = None) -> np.ndarray:
+    def predict(
+        self, X: np.ndarray | list[str], features_names: list[str] | None = None
+    ) -> np.ndarray:
         """
         Make predictions on input data.
 
@@ -50,6 +52,8 @@ class SentimentClassifier:
         """
         if not self.ready:
             raise RuntimeError("Model not loaded. Call load() first.")
+
+        assert self.model is not None, "Model should be loaded when ready is True"
 
         logger.info(f"Received prediction request with {len(X)} samples")
 
@@ -74,7 +78,7 @@ class SentimentClassifier:
             raise
 
     def predict_proba(
-        self, X: np.ndarray | list[str], features_names: list[str] = None
+        self, X: np.ndarray | list[str], features_names: list[str] | None = None
     ) -> np.ndarray:
         """
         Predict class probabilities.
@@ -88,6 +92,8 @@ class SentimentClassifier:
         """
         if not self.ready:
             raise RuntimeError("Model not loaded. Call load() first.")
+
+        assert self.model is not None, "Model should be loaded when ready is True"
 
         try:
             # Convert to list if numpy array

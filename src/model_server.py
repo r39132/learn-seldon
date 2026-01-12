@@ -30,7 +30,7 @@ model = None
 
 
 @app.on_event("startup")
-async def load_model():
+async def load_model() -> None:
     """Load the model on startup."""
     global model
     model_path = Path(MODEL_PATH)
@@ -42,13 +42,13 @@ async def load_model():
 
 
 @app.get("/health")
-async def health():
+async def health() -> dict[str, str | bool]:
     """Health check endpoint."""
     return {"status": "healthy", "model_loaded": model is not None}
 
 
 @app.post("/predict", response_model=PredictionResponse)
-async def predict(request: PredictionRequest):
+async def predict(request: PredictionRequest) -> PredictionResponse:
     """Make prediction."""
     if model is None:
         raise RuntimeError("Model not loaded")
