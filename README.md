@@ -131,7 +131,9 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## 📄 License
 
-Educational purposes. See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for community guidelines.
+Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for details.
+
+This project is for educational purposes. See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for community guidelines.
 
 ---
 
