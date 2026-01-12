@@ -89,6 +89,16 @@ pre-commit: ## Run pre-commit hooks
 	@echo "🔧 Running pre-commit hooks..."
 	@pre-commit run --all-files
 
+pre-push: ## Run pre-push hooks
+	@echo "🚀 Running pre-push hooks..."
+	@pre-commit run --hook-stage pre-push --all-files
+
+pre-commit-install: ## Install pre-commit hooks
+	@echo "📦 Installing pre-commit hooks..."
+	@pre-commit install
+	@pre-commit install --hook-type pre-push
+	@echo "✅ Pre-commit and pre-push hooks installed"
+
 validate: ## Validate project configuration and data
 	@echo "✅ Running project validation..."
 	@python scripts/validate.py

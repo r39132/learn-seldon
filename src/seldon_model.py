@@ -4,7 +4,7 @@ Seldon model wrapper for serving the sentiment analysis model.
 
 import logging
 import os
-from typing import Any, Dict, List, Union
+from typing import Any
 
 import joblib
 import numpy as np
@@ -37,9 +37,7 @@ class SentimentClassifier:
             logger.error(f"Failed to load model: {e}")
             raise
 
-    def predict(
-        self, X: Union[np.ndarray, List[str]], features_names: List[str] = None
-    ) -> np.ndarray:
+    def predict(self, X: np.ndarray | list[str], features_names: list[str] = None) -> np.ndarray:
         """
         Make predictions on input data.
 
@@ -76,7 +74,7 @@ class SentimentClassifier:
             raise
 
     def predict_proba(
-        self, X: Union[np.ndarray, List[str]], features_names: List[str] = None
+        self, X: np.ndarray | list[str], features_names: list[str] = None
     ) -> np.ndarray:
         """
         Predict class probabilities.
@@ -107,7 +105,7 @@ class SentimentClassifier:
             logger.error(f"Probability prediction failed: {e}")
             raise
 
-    def health_status(self) -> Dict[str, Any]:
+    def health_status(self) -> dict[str, Any]:
         """
         Return health status.
 

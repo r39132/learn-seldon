@@ -170,7 +170,7 @@ make test          # Run before committing
 make notebook      # Best way to learn the ML pipeline
 ```
 
-**direnv:** Automatically loads environment when you `cd` into the project  
+**direnv:** Automatically loads environment when you `cd` into the project
 **Pre-commit hooks:** Run automatically on `git commit` (setup.sh installs them)
 
 ## 🎓 Learning Path

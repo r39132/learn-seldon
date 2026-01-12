@@ -41,7 +41,7 @@ User Browser → FastAPI UI (8000) → Seldon Core (9000) → Scikit-Learn Model
 **Components:**
 - **FastAPI UI** - Web interface for text input
 - **Seldon Core** - Model serving platform
-- **Scikit-Learn** - Logistic Regression + TF-IDF (3 classes, 5000 features)
+- **Scikit-Learn** - Logistic Regression + TF-IDF (3 classes, 5000 features, 1-5 n-grams)
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed design.
 

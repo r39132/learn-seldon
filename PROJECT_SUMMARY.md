@@ -35,12 +35,12 @@ make validate  # Verify setup
 
 ## Technology Stack
 
-**ML:** scikit-learn, pandas, numpy  
-**Web:** FastAPI, Jinja2, httpx  
-**Serving:** Seldon Core  
-**Container:** Docker  
-**Orchestration:** Kubernetes (minikube)  
-**Tools:** uv, pyenv, jenv, direnv, gh  
+**ML:** scikit-learn, pandas, numpy
+**Web:** FastAPI, Jinja2, httpx
+**Serving:** Seldon Core
+**Container:** Docker
+**Orchestration:** Kubernetes (minikube)
+**Tools:** uv, pyenv, jenv, direnv, gh
 **Quality:** black, ruff, mypy, pytest
 
 ## Documentation

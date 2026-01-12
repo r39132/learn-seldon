@@ -24,7 +24,7 @@ source .venv/bin/activate
 if [ ! -f "models/sentiment_model.pkl" ]; then
     echo "📊 Generating training data..."
     python src/generate_data.py
-    
+
     echo ""
     echo "🤖 Training model..."
     python src/train_model.py

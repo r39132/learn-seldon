@@ -34,7 +34,7 @@ class TestSentimentDataGenerator:
         samples = generator.generate_samples()
         assert len(samples) == 100
         assert all(isinstance(item, tuple) and len(item) == 2 for item in samples)
-        assert all(label in ["positive", "negative"] for _, label in samples)
+        assert all(label in ["positive", "negative", "neutral"] for _, label in samples)
 
     def test_balanced_samples(self, generator: SentimentDataGenerator) -> None:
         """Test that samples are roughly balanced."""

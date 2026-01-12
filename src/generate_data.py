@@ -7,7 +7,6 @@ import json
 import os
 import random
 from pathlib import Path
-from typing import List, Tuple
 
 import pandas as pd
 from dotenv import load_dotenv
@@ -108,7 +107,7 @@ class SentimentDataGenerator:
             "desk",
         ]
 
-    def generate_samples(self) -> List[Tuple[str, str]]:
+    def generate_samples(self) -> list[tuple[str, str]]:
         """
         Generate samples with labels.
 

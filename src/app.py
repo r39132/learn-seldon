@@ -5,7 +5,6 @@ This app provides a web interface and calls the Seldon inference server.
 
 import logging
 import os
-from typing import Dict
 
 import httpx
 from dotenv import load_dotenv
@@ -94,7 +93,7 @@ async def analyze_sentiment(request: Request, text: str = Form("")) -> HTMLRespo
         )
 
 
-async def call_model_server(text: str) -> Dict[str, str]:
+async def call_model_server(text: str) -> dict[str, str]:
     """
     Call the model server API.
 
@@ -127,17 +126,19 @@ async def call_model_server(text: str) -> Dict[str, str]:
 
     except httpx.HTTPStatusError as e:
         logger.error(f"Model server returned error: {e}")
-        raise HTTPException(status_code=e.response.status_code, detail=str(e))
+        raise HTTPException(status_code=e.response.status_code, detail=str(e)) from e
     except httpx.RequestError as e:
         logger.error(f"Failed to connect to model server: {e}")
-        raise HTTPException(status_code=503, detail=f"Cannot connect to model server: {str(e)}")
+        raise HTTPException(
+            status_code=503, detail=f"Cannot connect to model server: {str(e)}"
+        ) from e
     except Exception as e:
         logger.error(f"Unexpected error: {e}")
-        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}") from e
 
 
 @app.get("/health")
-async def health_check() -> Dict[str, str]:
+async def health_check() -> dict[str, str]:
     """
     Health check endpoint.
 

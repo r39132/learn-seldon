@@ -3,9 +3,7 @@ Sentiment analysis model training script.
 """
 
 import os
-import pickle
 from pathlib import Path
-from typing import Any, Tuple
 
 import joblib
 import numpy as np
@@ -27,7 +25,7 @@ class SentimentModel:
     def __init__(
         self,
         max_features: int = 5000,
-        ngram_range: Tuple[int, int] = (1, 2),
+        ngram_range: tuple[int, int] = (1, 5),
         random_state: int = 42,
     ) -> None:
         """
@@ -35,7 +33,7 @@ class SentimentModel:
 
         Args:
             max_features: Maximum number of features for TF-IDF
-            ngram_range: N-gram range for TF-IDF
+            ngram_range: N-gram range for TF-IDF (1-5: unigrams through 5-grams)
             random_state: Random state for reproducibility
         """
         self.max_features = max_features

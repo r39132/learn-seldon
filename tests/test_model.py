@@ -2,11 +2,9 @@
 Tests for the sentiment model.
 """
 
-import os
 import sys
 from pathlib import Path
 
-import joblib
 import numpy as np
 import pytest
 

@@ -5,7 +5,7 @@ Recent updates transforming the project to use modern tooling and three-class se
 ## Key Enhancements
 
 ### 1. Three-Class Sentiment Classification ✅
-- **Before:** Binary (Positive/Negative)  
+- **Before:** Binary (Positive/Negative)
 - **After:** Three-class (Positive/Neutral/Negative) with confidence scores
 - Updated data generator, model, and web UI
 
@@ -48,5 +48,5 @@ See [README.md](README.md) for full documentation.
 
 ---
 
-**Status:** All enhancements complete ✅  
+**Status:** All enhancements complete ✅
 **Date:** January 12, 2026

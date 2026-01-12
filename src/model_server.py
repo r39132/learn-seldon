@@ -1,4 +1,5 @@
 """FastAPI model serving endpoint (alternative to Seldon)."""
+
 import os
 from pathlib import Path
 
@@ -51,20 +52,18 @@ async def predict(request: PredictionRequest):
     """Make prediction."""
     if model is None:
         raise RuntimeError("Model not loaded")
-    
+
     # Get prediction
     prediction = model.predict([request.text])[0]
     proba = model.predict_proba([request.text])[0]
-    
+
     # Get confidence for predicted class
     confidence = float(max(proba))
-    
-    return PredictionResponse(
-        prediction=prediction,
-        probability=confidence
-    )
+
+    return PredictionResponse(prediction=prediction, probability=confidence)
 
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8001)

@@ -38,7 +38,9 @@ class TestFastAPIApp:
         assert data["service"] == "sentiment-analyzer-ui"
 
     @patch("app.call_seldon_api")
-    async def test_analyze_positive_sentiment(self, mock_seldon: AsyncMock, client: TestClient) -> None:
+    async def test_analyze_positive_sentiment(
+        self, mock_seldon: AsyncMock, client: TestClient
+    ) -> None:
         """Test analyze endpoint with positive sentiment."""
         # Mock Seldon response
         mock_seldon.return_value = {"sentiment": "positive", "text": "Great product!"}
