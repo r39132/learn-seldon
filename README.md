@@ -2,6 +2,8 @@
 
 A production-ready ML project demonstrating three-class sentiment analysis (Positive/Neutral/Negative) with model training, deployment, and serving using Seldon Core on Kubernetes.
 
+> **📸 [View Screenshots](screenshots/)** - See the UI in action
+
 ## 🎯 Features
 
 - **Three-class sentiment** classification with confidence scores
