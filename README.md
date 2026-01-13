@@ -1,5 +1,13 @@
 # Sentiment Analyzer with Seldon Core v1
 
+[![CI/CD Pipeline](https://github.com/r39132/learn-seldon/actions/workflows/ci.yml/badge.svg)](https://github.com/r39132/learn-seldon/actions/workflows/ci.yml)
+[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![Seldon Core](https://img.shields.io/badge/Seldon%20Core-v1.17.1-green.svg)](https://github.com/SeldonIO/seldon-core)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](docs/CONTRIBUTING.md)
+
 A production-ready ML project demonstrating three-class sentiment analysis (Positive/Neutral/Negative) with model training, deployment, and serving using **Seldon Core v1** on Kubernetes.
 
 > **Note**: This project uses Seldon Core v1 (v1.17.1) which uses the `machinelearning.seldon.io/v1` API.
