@@ -1,6 +1,6 @@
 # Seldon Core v1 Implementation Summary
 
-This document summarizes the changes made to implement Seldon Core v1 in the learn-seldon repository.
+This document summarizes the changes made to implement Seldon Core v1 in the learn-seldon-core-v1 repository.
 
 ## What Changed
 

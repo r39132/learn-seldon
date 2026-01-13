@@ -93,7 +93,7 @@ echo 'eval "$(direnv hook bash)"' >> ~/.bash_profile  # for bash
 source ~/.zshrc
 
 # Allow direnv in project directory
-cd /path/to/learn-seldon
+cd /path/to/learn-seldon-core-v1
 direnv allow .
 ```
 
@@ -198,8 +198,8 @@ Once all tools are installed, set up the project:
 
 ```bash
 # Clone repository (if using GitHub)
-gh repo clone <username>/learn-seldon
-cd learn-seldon
+gh repo clone <username>/learn-seldon-core-v1
+cd learn-seldon-core-v1
 
 # Allow direnv to load environment
 direnv allow .
@@ -225,7 +225,7 @@ make help
 The project uses these configuration files:
 
 ```
-learn-seldon/
+learn-seldon-core-v1/
 ├── .python-version          # pyenv: Python 3.12.3
 ├── .java-version            # jenv: Java 17
 ├── .envrc                   # direnv: Environment variables

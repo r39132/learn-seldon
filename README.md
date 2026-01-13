@@ -1,6 +1,6 @@
 # Sentiment Analyzer with Seldon Core v1
 
-[![CI/CD Pipeline](https://github.com/r39132/learn-seldon/actions/workflows/ci.yml/badge.svg)](https://github.com/r39132/learn-seldon/actions/workflows/ci.yml)
+[![CI/CD Pipeline](https://github.com/r39132/learn-seldon-core-v1/actions/workflows/ci.yml/badge.svg)](https://github.com/r39132/learn-seldon-core-v1/actions/workflows/ci.yml)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![Seldon Core](https://img.shields.io/badge/Seldon%20Core-v1.17.1-green.svg)](https://github.com/SeldonIO/seldon-core)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
@@ -106,7 +106,7 @@ make clean               # Clean generated files
 ## 📁 Project Structure
 
 ```
-learn-seldon/
+learn-seldon-core-v1/
 ├── src/              # Source code
 │   ├── app.py              # FastAPI UI application
 │   ├── model_server.py     # FastAPI model server (non-Seldon)

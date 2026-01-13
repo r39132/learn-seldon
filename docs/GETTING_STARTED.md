@@ -28,8 +28,8 @@ brew --version
 
 ```bash
 cd ~/Projects  # or wherever you keep projects
-gh repo clone <username>/learn-seldon  # Using GitHub CLI
-cd learn-seldon
+gh repo clone <username>/learn-seldon-core-v1  # Using GitHub CLI
+cd learn-seldon-core-v1
 
 # Allow direnv to auto-load environment (if installed)
 direnv allow .

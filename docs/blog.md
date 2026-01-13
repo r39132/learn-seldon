@@ -6,7 +6,7 @@ In architecture discussions at scale, Seldon comes up frequently as the ML servi
 
 To address this, I built a learning-focused repository that strips away the complexity and demonstrates Seldon Core v1's foundational architecture through a practical sentiment analysis implementation.
 
-**Repository**: https://github.com/r39132/learn-seldon/
+**Repository**: https://github.com/r39132/learn-seldon-core-v1/
 
 > **⚠️ Note**: The sentiment analysis model used in this project is intentionally naive (Logistic Regression with TF-IDF) and designed purely for illustration purposes. The focus is on demonstrating Seldon Core v1 deployment architecture and patterns, not state-of-the-art NLP techniques.
 
@@ -14,7 +14,7 @@ This article covers:
 - The technical landscape Seldon addresses and how it compares to alternatives
 - Seldon's architecture with control plane and data plane components
 - Implementation details for ML training and inference deployment
-- A walkthrough of the learn-seldon project structure
+- A walkthrough of the learn-seldon-core-v1 project structure
 
 ---
 
@@ -388,7 +388,7 @@ kubectl get seldondeployments -n seldon-demo
 kubectl get pods -n seldon-demo
 ```
 
-**Key Files in learn-seldon:**
+**Key Files in learn-seldon-core-v1:**
 
 | File | Purpose |
 |------|---------|
@@ -407,9 +407,9 @@ The project shows **two deployment paths**:
 
 ---
 
-## Reference Implementation: learn-seldon
+## Reference Implementation: learn-seldon-core-v1
 
-The [learn-seldon](https://github.com/r39132/learn-seldon) repository provides a working implementation demonstrating Seldon's core concepts through a sentiment analysis use case.
+The [learn-seldon-core-v1](https://github.com/r39132/learn-seldon-core-v1) repository provides a working implementation demonstrating Seldon's core concepts through a sentiment analysis use case.
 
 **Technical Scope**
 - Three-class sentiment classification (Positive, Neutral, Negative)
@@ -431,8 +431,8 @@ The [learn-seldon](https://github.com/r39132/learn-seldon) repository provides a
 
 ```bash
 # Clone and setup
-git clone https://github.com/r39132/learn-seldon
-cd learn-seldon
+git clone https://github.com/r39132/learn-seldon-core-v1
+cd learn-seldon-core-v1
 make setup
 
 # Generate data and train model
@@ -467,9 +467,9 @@ Seldon Core v1 addresses operational challenges in production ML deployments thr
 
 The initial learning curve exists because Seldon optimizes for operational concerns (reusability, composition, standardization) rather than single-model simplicity. This trade-off makes sense for organizations operating multiple models in production with existing Kubernetes infrastructure.
 
-The learn-seldon repository provides a reference implementation focused on v1 core concepts before introducing production complexity. This approach addresses the gap between "hello world" tutorials and production-grade deployments.
+The learn-seldon-core-v1 repository provides a reference implementation focused on v1 core concepts before introducing production complexity. This approach addresses the gap between "hello world" tutorials and production-grade deployments.
 
-**Repository**: https://github.com/r39132/learn-seldon/
+**Repository**: https://github.com/r39132/learn-seldon-core-v1/
 
 ---
 
