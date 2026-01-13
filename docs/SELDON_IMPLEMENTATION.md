@@ -12,17 +12,19 @@ This document summarizes the changes made to implement Seldon Core v1 in the lea
 
 #### `src/seldon_model.py` (UPDATED)
 - Updated to properly implement Seldon Core v1 Python wrapper interface
-- Model loading now happens in `__init__()` (called once by Seldon on startup)
+- `__init__()` accepts **kwargs to handle Seldon-passed parameters (e.g., model_name)
+- Model loading happens in `__init__()` (called once by Seldon on startup)
 - Enhanced input handling for various data formats (numpy arrays, lists, nested lists)
 - Added proper type hints compatible with Seldon
 - Improved error handling and logging
-- Methods: `__init__()`, `predict()`, `predict_proba()`, `health_status()`
+- Methods: `__init__(**kwargs)`, `predict()`, `predict_proba()`, `health_status()`
 
 #### `Dockerfile.seldon` (UPDATED)
-- Updated to work with Seldon Core runtime
+- Includes seldon-core==1.17.1 dependency for proper wrapper functionality
 - Model class file named `SentimentClassifier.py` for Seldon import
 - Working directory set to `/microservice` (Seldon convention)
-- Proper port exposure (5000) for Seldon
+- Exposes port 9000 for REST API (Seldon default)
+- CMD runs `seldon-core-microservice SentimentClassifier --service-type MODEL`
 
 ### 2. Kubernetes Configuration
 
@@ -38,11 +40,16 @@ This document summarizes the changes made to implement Seldon Core v1 in the lea
 #### `Makefile` (UPDATED)
 - Added `docker-build-seldon` target for building Seldon image only
 - Added `k8s-deploy-seldon` target for Seldon deployment
+- Added `k8s-seldon-status` target to check deployment status
+- Added `k8s-seldon-logs` target to view logs
+- Added `k8s-seldon-forward` target for port forwarding
+- Added `k8s-seldon-test` target to run tests
 - Updated image names to distinguish Seldon vs FastAPI versions
 
 #### `scripts/deploy-seldon.sh` (NEW)
 - Automated deployment script for Seldon Core v1
-- Installs Seldon Core operator v1.17.1 if not present
+- Installs Seldon Core operator v1.17.1 via Helm if not present
+- Requires Helm package manager (auto-installs if using Homebrew)
 - Builds Docker image in minikube
 - Copies model file to minikube
 - Deploys SeldonDeployment CRD

@@ -27,10 +27,13 @@ class SentimentClassifier:
     - health_status(): Health check endpoint (optional)
     """
 
-    def __init__(self) -> None:
+    def __init__(self, **kwargs: Any) -> None:
         """
         Initialize and load the classifier.
         In Seldon Core v1, __init__ is called once when the container starts.
+
+        Args:
+            **kwargs: Seldon may pass parameters like model_name, etc.
         """
         self.model = None
         self.ready = False

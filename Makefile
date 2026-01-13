@@ -69,6 +69,31 @@ k8s-deploy-seldon: ## Deploy to Kubernetes with Seldon Core
 	@echo "☸️  Deploying to Kubernetes with Seldon Core..."
 	@./scripts/deploy-seldon.sh
 
+k8s-seldon-status: ## Check Seldon deployment status
+	@echo "📊 Checking Seldon deployment status..."
+	@echo ""
+	@echo "SeldonDeployments:"
+	@kubectl get seldondeployments -n seldon 2>/dev/null || echo "  No SeldonDeployments found"
+	@echo ""
+	@echo "Pods:"
+	@kubectl get pods -n seldon 2>/dev/null || echo "  No pods found"
+	@echo ""
+	@echo "Services:"
+	@kubectl get svc -n seldon 2>/dev/null || echo "  No services found"
+
+k8s-seldon-logs: ## View Seldon deployment logs
+	@echo "📝 Viewing Seldon deployment logs..."
+	@kubectl logs -f -l seldon-deployment-id=sentiment-classifier -n seldon --tail=50
+
+k8s-seldon-forward: ## Port forward to Seldon service (background process)
+	@echo "🌐 Setting up port forwarding to Seldon service..."
+	@echo "  Access at: http://localhost:8080/api/v1.0/predictions"
+	@echo "  Press Ctrl+C to stop port forwarding"
+	@kubectl port-forward svc/sentiment-classifier-default -n seldon 8080:8000
+
+k8s-seldon-test: ## Test Seldon deployment
+	@./scripts/test-seldon.sh
+
 k8s-clean: ## Clean up Kubernetes resources
 	@echo "🧹 Cleaning up Kubernetes..."
 	@./scripts/cleanup-k8s.sh

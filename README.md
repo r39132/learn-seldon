@@ -34,13 +34,13 @@ A production-ready ML project demonstrating three-class sentiment analysis (Posi
 
 | Guide | Description |
 |-------|-------------|
-| [TOOLS_SETUP.md](TOOLS_SETUP.md) | Install pyenv, jenv, direnv, uv, gh |
-| [GETTING_STARTED.md](GETTING_STARTED.md) | Step-by-step tutorial |
-| [DEPLOYMENT.md](DEPLOYMENT.md) | Kubernetes deployment (FastAPI version) |
-| [SELDON_DEPLOYMENT.md](SELDON_DEPLOYMENT.md) | **Seldon Core v1 deployment guide** |
-| [QUICKREF.md](QUICKREF.md) | Quick command reference |
-| [ARCHITECTURE.md](ARCHITECTURE.md) | System architecture |
-| [blog.md](blog.md) | Deep dive into Seldon Core v1 |
+| [TOOLS_SETUP.md](docs/TOOLS_SETUP.md) | Install pyenv, jenv, direnv, uv, gh |
+| [GETTING_STARTED.md](docs/GETTING_STARTED.md) | Step-by-step tutorial |
+| [DEPLOYMENT.md](docs/DEPLOYMENT.md) | Kubernetes deployment (FastAPI version) |
+| [SELDON_DEPLOYMENT.md](docs/SELDON_DEPLOYMENT.md) | **Seldon Core v1 deployment guide** |
+| [QUICKREF.md](docs/QUICKREF.md) | Quick command reference |
+| [ARCHITECTURE.md](docs/ARCHITECTURE.md) | System architecture |
+| [blog.md](docs/blog.md) | Deep dive into Seldon Core v1 |
 
 ## 🏗️ Architecture
 
@@ -67,9 +67,9 @@ User Browser → FastAPI UI (8000) → Model Server (8001) → Scikit-Learn Mode
 - **Model Server** - Simple FastAPI endpoint
 - **Scikit-Learn** - Same model as Seldon deployment
 
-See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed design.
+See [ARCHITECTURE.md](docs/ARCHITECTURE.md) for detailed design.
 
-> **📖** See [GETTING_STARTED.md](GETTING_STARTED.md) for step-by-step tutorial and [TOOLS_SETUP.md](TOOLS_SETUP.md) for tool installation.
+> **📖** See [GETTING_STARTED.md](docs/GETTING_STARTED.md) for step-by-step tutorial and [TOOLS_SETUP.md](docs/TOOLS_SETUP.md) for tool installation.
 
 ## 🛠️ Available Commands
 
@@ -149,7 +149,7 @@ make k8s-deploy    # Deploy to Kubernetes
 make k8s-clean     # Cleanup resources
 ```
 
-See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed Kubernetes operations, troubleshooting, and advanced configurations.
+See [DEPLOYMENT.md](docs/DEPLOYMENT.md) for detailed Kubernetes operations, troubleshooting, and advanced configurations.
 
 ## 📚 Notebooks
 
@@ -160,7 +160,7 @@ Run with `make notebook` or `make jupyter`
 
 ## 🔍 Troubleshooting
 
-For common issues and solutions, see [DEPLOYMENT.md](DEPLOYMENT.md) and [QUICKREF.md](QUICKREF.md).
+For common issues and solutions, see [DEPLOYMENT.md](docs/DEPLOYMENT.md) and [QUICKREF.md](docs/QUICKREF.md).
 
 **Quick fixes:**
 - Model not found? Run `make train`
@@ -169,13 +169,13 @@ For common issues and solutions, see [DEPLOYMENT.md](DEPLOYMENT.md) and [QUICKRE
 
 ## 🤝 Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for guidelines.
 
 ## 📄 License
 
 Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for details.
 
-This project is for educational purposes. See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for community guidelines.
+This project is for educational purposes. See [CODE_OF_CONDUCT.md](docs/CODE_OF_CONDUCT.md) for community guidelines.
 
 ---
 

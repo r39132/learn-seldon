@@ -50,15 +50,31 @@ make k8s-deploy-seldon
 
 This script will:
 - Start minikube (if not running)
+- Install Helm (if not installed)
 - Build the Docker image in minikube
 - Copy the model file to minikube
-- Install Seldon Core v1.17.1 (if not installed)
+- Install Seldon Core v1.17.1 via Helm (if not installed)
 - Deploy the SeldonDeployment CRD
 
-### 3. Access the Model
+### 3. Check Deployment Status
+
+```bash
+make k8s-seldon-status
+```
+
+This shows:
+- SeldonDeployment resources
+- Pod status (should be 2/2 Running)
+- Services created
+
+### 4. Access the Model
 
 **Port forward to the service:**
 ```bash
+# Using make target (recommended)
+make k8s-seldon-forward
+
+# Or manually:
 kubectl port-forward svc/sentiment-classifier-default -n seldon 8080:8000
 ```
 
@@ -75,12 +91,14 @@ curl -X POST http://localhost:8080/api/v1.0/predictions \
   -d '{"data":{"ndarray":["Great product!", "Not good", "It works fine"]}}'
 ```
 
-**Or use the test script:**
+**Or use the make target:**
 ```bash
-# In terminal 1 (keep running)
-kubectl port-forward svc/sentiment-classifier-default -n seldon 8080:8000
+# Port forward in background, then test
+make k8s-seldon-forward &
+sleep 2
+make k8s-seldon-test
 
-# In terminal 2
+# Or use the test script directly:
 ./scripts/test-seldon.sh
 ```
 
@@ -334,7 +352,7 @@ curl -X POST http://localhost:8080/api/v1.0/predictions \
 
 ## Next Steps
 
-- Read [blog.md](../blog.md) for detailed Seldon Core v1 architecture
+- Read [blog.md](blog.md) for detailed Seldon Core v1 architecture
 - Explore [examples](https://github.com/SeldonIO/seldon-core/tree/v1.17.1/examples) in Seldon repo
 - Review [official docs](https://docs.seldon.io/projects/seldon-core/en/v1.17.1/)
 - Try implementing custom transformers or routers

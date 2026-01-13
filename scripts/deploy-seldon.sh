@@ -36,12 +36,28 @@ kubectl apply -f k8s/namespace.yaml
 # Check if Seldon Core is installed
 echo "🔍 Checking for Seldon Core installation..."
 if ! kubectl get crd seldondeployments.machinelearning.seldon.io &> /dev/null; then
-    echo "📦 Installing Seldon Core v1.17.1..."
+    echo "📦 Installing Seldon Core v1.17.1 using Helm..."
     kubectl create namespace seldon-system || true
-    kubectl apply -f https://github.com/SeldonIO/seldon-core/releases/download/v1.17.1/seldon-core-operator.yaml
 
-    echo "⏳ Waiting for Seldon Core operator to be ready..."
-    kubectl wait --for=condition=available --timeout=300s deployment/seldon-controller-manager -n seldon-system
+    # Check if helm is installed
+    if ! command -v helm &> /dev/null; then
+        echo "❌ Helm is not installed. Please install Helm first:"
+        echo "   brew install helm"
+        exit 1
+    fi
+
+    # Add Seldon helm repo
+    helm repo add seldonio https://storage.googleapis.com/seldon-charts || true
+    helm repo update
+
+    # Install Seldon Core operator
+    helm install seldon-core seldonio/seldon-core-operator \
+        --version 1.17.1 \
+        --namespace seldon-system \
+        --set usageMetrics.enabled=false \
+        --set istio.enabled=false \
+        --wait
+
     echo "✅ Seldon Core installed"
 else
     echo "✅ Seldon Core is already installed"

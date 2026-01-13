@@ -25,10 +25,10 @@ This article covers:
 The framework tackles several problems common in production ML deployments:
 
 **Model Serving as Microservices**
-ML models deployed as production services require the same operational rigor as other microservices: versioning, rollback capabilities, health checks, and observability. Seldon treats model deployments as first-class Kubernetes resources via Custom Resource Definitions (CRDs).
+ML models deployed as production services require the same operational rigor as other microservices: versioning, rollback capabilities, health checks, and observability. Seldon treats model deployments as first-class Kubernetes resources via [Custom Resource Definitions (CRDs)](#crd-custom-resource-definition).
 
 **Inference Graph Composition**
-Real-world inference often requires multiple steps — preprocessing, model execution, ensemble aggregation, and post-processing. Seldon provides declarative inference graphs that compose these components with synchronous HTTP/gRPC communication.
+Real-world inference often requires multiple steps — preprocessing, model execution, ensemble aggregation, and post-processing. Seldon provides declarative [inference graphs](#inference-graph) that compose these components with synchronous HTTP/gRPC communication.
 
 **Language-Agnostic Deployment**
 Production ML models are written in various languages (Python, Java, R, Go). Seldon's prepackaged model servers support multiple frameworks (scikit-learn, TensorFlow, PyTorch, XGBoost) while allowing custom containers for specialized logic.
@@ -40,8 +40,8 @@ Core architectural principles:
 
 - Models wrapped in standardized containers exposing REST/gRPC APIs
 - Inference graphs define multi-component workflows with synchronous composition
-- Kubernetes Operator manages lifecycle of SeldonDeployment resources
-- Service orchestrator (Ambassador/Istio/built-in) handles routing and observability
+- [Kubernetes Operator](#kubernetes-operator) manages lifecycle of SeldonDeployment resources
+- [Service orchestrator](#service-orchestrator) (Ambassador/Istio/built-in) handles routing and observability
 - All configuration expressed as Kubernetes Custom Resources
 
 ### Comparison with Alternative Frameworks
@@ -67,26 +67,26 @@ GPU-optimized inference server supporting TensorFlow, PyTorch, ONNX, TensorRT. S
 
 **Kubernetes-Native Architecture**
 Seldon implements ML serving as Kubernetes Custom Resources (SeldonDeployment). This enables:
-- HPA integration for autoscaling based on inference metrics
-- Native rollout strategies (canary, blue-green) using standard Kubernetes updates
-- GitOps workflows using standard Kubernetes tools (ArgoCD, Flux)
+- [HPA](#hpa-horizontal-pod-autoscaler) integration for autoscaling based on inference metrics
+- Native rollout strategies ([canary](#canary-deployment), blue-green) using standard Kubernetes updates
+- [GitOps](#gitops) workflows using standard Kubernetes tools (ArgoCD, Flux)
 - Prometheus and distributed tracing integration via service mesh patterns
 
 **Composable Inference Graphs**
 Many production use cases require more than simple model invocation. Seldon supports [inference graphs](https://docs.seldon.io/projects/seldon-core/en/v1.17.1/graph/inference-graph.html) with declarative component composition:
 - Preprocessing transformers that normalize input data
-- Ensemble models that aggregate predictions from multiple models
+- [Ensemble](#model-ensemble) models that aggregate predictions from multiple models
 - Post-processing components for business rule application
-- Conditional routing (A/B testing, multi-armed bandits) based on traffic splitting
+- Conditional routing ([A/B testing](#ab-testing), multi-armed bandits) based on traffic splitting
 - Combiners that merge outputs from parallel model execution
 
-**Prepackaged Model Servers**
+**[Prepackaged Model Servers](#prepackaged-model-server)**
 Seldon provides ready-to-use model servers for common ML frameworks:
 - SKLearn Server for scikit-learn models
 - TensorFlow Serving integration
 - MLflow Server for MLflow models
 - XGBoost Server for XGBoost models
-- Custom servers via language wrappers (Python, Java, R, Go, NodeJS)
+- Custom servers via [language wrappers](#language-wrapper) (Python, Java, R, Go, NodeJS)
 
 ---
 
@@ -102,7 +102,7 @@ Kubernetes controller that manages the lifecycle of ML deployments ([source](htt
 - Generates Kubernetes Deployments for each predictor component
 - Creates Services for inference endpoints
 - Manages ConfigMaps for model metadata and configurations
-- Implements reconciliation loops to maintain desired state
+- Implements [reconciliation loops](#reconciliation-loop) to maintain desired state
 - Supports multiple replicas per component with horizontal pod autoscaling
 
 **Service Orchestrator**
@@ -115,8 +115,8 @@ Request routing layer with multiple implementation options:
 - Metrics and distributed tracing
 
 *Istio Integration*
-- Service mesh integration for advanced traffic management
-- mTLS for secure model-to-model communication
+- [Service mesh](#service-mesh) integration for advanced traffic management
+- [mTLS](#mtls-mutual-tls) for secure model-to-model communication
 - Fine-grained observability and policy enforcement
 
 *Seldon Engine (Built-in)*
@@ -136,7 +136,7 @@ Ready-to-use containers for common ML frameworks:
 
 **Language Wrappers**
 SDKs for building custom prediction containers:
-- Python (most common, includes s2i builder)
+- Python (most common, includes [s2i](#s2i-source-to-image) builder)
 - Java (Spring Boot based)
 - R (via Plumber)
 - Go
@@ -297,7 +297,7 @@ class SentimentClassifier:
         return [{"type": "COUNTER", "key": "requests", "value": 1}]
 ```
 
-**Build with s2i (Source-to-Image):**
+**Build with [s2i (Source-to-Image)](#s2i-source-to-image):**
 ```bash
 s2i build . seldonio/seldon-core-s2i-python38:1.17.1 sentiment-model:0.1
 ```
@@ -470,5 +470,54 @@ The initial learning curve exists because Seldon optimizes for operational conce
 The learn-seldon repository provides a reference implementation focused on v1 core concepts before introducing production complexity. This approach addresses the gap between "hello world" tutorials and production-grade deployments.
 
 **Repository**: https://github.com/r39132/learn-seldon/
+
+---
+
+## Appendix: Glossary of Concepts
+
+### CRD (Custom Resource Definition)
+A Kubernetes extension mechanism that allows you to define custom resource types beyond the built-in ones (Pods, Services, Deployments, etc.). CRDs let you extend the Kubernetes API with domain-specific objects. In Seldon's case, `SeldonDeployment` is a CRD that represents ML model deployments as native Kubernetes resources.
+
+### Kubernetes Operator
+A software pattern for managing applications on Kubernetes. An Operator is a controller that watches Custom Resources and performs actions to maintain the desired state. The Seldon Core Operator watches `SeldonDeployment` resources and creates the necessary Kubernetes objects (Deployments, Services, ConfigMaps) to run ML models.
+
+### Service Orchestrator
+A component that routes requests to appropriate backend services and manages the execution flow. In Seldon, the service orchestrator handles inference request routing, executes inference graphs (chains of transformers, models, combiners), and provides observability. Options include Ambassador, Istio, or Seldon's built-in engine.
+
+### s2i (Source-to-Image)
+A toolkit for building reproducible container images from source code without writing Dockerfiles. Developed by Red Hat/OpenShift, s2i takes application source code and a builder image, then produces a ready-to-run container image. Seldon provides s2i builder images (e.g., `seldonio/seldon-core-s2i-python38`) that package Python model code into containers with the proper runtime and wrapper logic.
+
+### Inference Graph
+A directed acyclic graph (DAG) defining the flow of data through multiple components during prediction. Components can include transformers (preprocessing), models (predictors), combiners (ensembles), and routers (A/B tests). Seldon executes these graphs with synchronous HTTP/gRPC calls between components.
+
+### GitOps
+An operational framework that uses Git as the single source of truth for declarative infrastructure and applications. Changes are made via Git commits, and automated systems synchronize the actual state to match Git. Popular tools include ArgoCD and Flux. Seldon's Kubernetes-native design (CRDs) makes it GitOps-friendly.
+
+### HPA (Horizontal Pod Autoscaler)
+Kubernetes resource that automatically scales the number of pod replicas based on observed metrics (CPU, memory, custom metrics). Seldon deployments can use HPA to scale model replicas based on inference request rates or latency.
+
+### Service Mesh
+Infrastructure layer that handles service-to-service communication in microservices architectures. Provides features like load balancing, service discovery, encryption (mTLS), observability, and traffic management. Istio is a popular service mesh that integrates with Seldon for advanced routing and security.
+
+### Canary Deployment
+A deployment strategy where a new version receives a small percentage of traffic initially, then gradually increases if metrics look good. Reduces risk by limiting blast radius. Seldon supports canary deployments through traffic splitting in the service orchestrator.
+
+### A/B Testing
+Running multiple versions simultaneously with traffic split between them to compare performance. Unlike canary (gradual rollout), A/B testing maintains steady traffic splits for statistical comparison. Seldon implements this via router components in inference graphs.
+
+### Model Ensemble
+Combining predictions from multiple models to improve accuracy and robustness. Common strategies include averaging (regression), voting (classification), or stacking (using another model to combine predictions). Seldon supports ensembles via combiner components.
+
+### mTLS (mutual TLS)
+Transport Layer Security where both client and server authenticate each other using certificates. Provides encrypted communication and strong identity verification. Service meshes like Istio can automatically add mTLS to Seldon model communications.
+
+### Reconciliation Loop
+A control pattern where a controller continuously compares desired state (from CRDs) to actual state (running resources) and takes actions to converge them. The Seldon Operator runs reconciliation loops to ensure SeldonDeployments match their specifications.
+
+### Prepackaged Model Server
+Ready-to-use container images for common ML frameworks that can serve models without custom code. Examples: `seldonio/sklearn-server` for scikit-learn, TensorFlow Serving for TensorFlow, Triton for GPU inference. Reduces implementation effort for standard use cases.
+
+### Language Wrapper
+SDK/framework for building custom prediction containers in various programming languages. Provides the interface contract (predict, predict_proba, etc.) and runtime scaffolding. Seldon offers wrappers for Python, Java, R, Go, and NodeJS.
 
 Contributions addressing gaps in documentation, additional examples, or new learning scenarios are welcome via pull requests and issues.
