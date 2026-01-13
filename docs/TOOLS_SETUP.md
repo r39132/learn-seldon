@@ -201,24 +201,32 @@ Once all tools are installed, set up the project:
 gh repo clone <username>/learn-seldon-core-v1
 cd learn-seldon-core-v1
 
-# Allow direnv to load environment
-direnv allow .
+# Run automated setup (installs tools, creates venv, installs deps, generates data, trains model)
+make setup
 
-# Create virtual environment with uv
-uv venv .venv --python 3.12.3
+# If new tools were installed, restart your terminal and allow direnv
+direnv allow .
 
 # Activate virtual environment
 source .venv/bin/activate
 
-# Install dependencies
-uv pip install -e ".[dev]"
-
-# Install pre-commit hooks
-pre-commit install
-
 # Verify setup
 make help
 ```
+
+**What `make setup` does:**
+- Installs missing tools: pyenv, jenv, direnv, uv, gh, Java 17
+- Configures Python 3.12.3 with pyenv
+- Creates virtual environment with uv
+- Installs all Python dependencies (including dev dependencies)
+- Sets up pre-commit hooks
+- Generates training data
+- Trains the initial model
+
+**Manual steps only needed:**
+1. If new tools were installed, add them to your shell config and restart terminal
+2. Run `direnv allow .` to load environment variables
+3. Activate the virtual environment
 
 ## Tool Configuration Files
 

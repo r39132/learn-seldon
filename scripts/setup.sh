@@ -79,14 +79,26 @@ if ! command -v java &> /dev/null; then
     fi
 fi
 
+# Allow direnv if available
+if command -v direnv &> /dev/null; then
+    echo "🔧 Allowing direnv to load .envrc..."
+    direnv allow . 2>/dev/null || true
+fi
+
 # Create virtual environment and install dependencies
+echo "📦 Creating virtual environment with uv..."
+if [ ! -d ".venv" ]; then
+    uv venv --python 3.12.3
+else
+    echo "   Virtual environment already exists, skipping..."
+fi
+
 echo "📦 Installing Python dependencies..."
-uv venv
 source .venv/bin/activate
 uv pip install -e ".[dev]"
 
 # Copy .env-example to .env if .env doesn't exist
-if [ ! -f .env ]; then
+if [ ! -f .env ] && [ -f .env-example ]; then
     echo "📝 Creating .env file..."
     cp .env-example .env
 fi
