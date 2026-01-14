@@ -36,12 +36,12 @@ This project demonstrates:
 
 ### Features
 
-✅ **Three-class sentiment** (Positive/Neutral/Negative) with confidence scores
-✅ **Seldon Core v1** production-grade model serving
-✅ **FastAPI UI** for easy interaction
-✅ **Complete automation** via Makefiles
-✅ **Kubernetes deployment** on minikube
-✅ **Jupyter notebooks** for interactive exploration
+- ✅ **Three-class sentiment** (Positive/Neutral/Negative) with confidence scores
+- ✅ **Seldon Core v1** production-grade model serving
+- ✅ **FastAPI UI** for easy interaction
+- ✅ **Complete automation** via Makefiles
+- ✅ **Kubernetes deployment** on minikube
+- ✅ **Jupyter notebooks** for interactive exploration
 
 ## Development, Testing, & Deployment
 
@@ -55,40 +55,11 @@ This project demonstrates:
 All development tools (Python, Java, pyenv, jenv, direnv, uv) are installed automatically.
 
 ### Setup
-
-```bash
-# Clone repository
-gh repo clone <username>/learn-seldon-core-v1
-cd learn-seldon-core-v1
-
-# Run automated setup
-make setup
-```
-
-This installs all tools, creates virtual environment, and installs dependencies.
-
-**After setup:** Configure your shell and restart terminal (see [SETUP.md](docs/SETUP.md)).
+Refer to [SETUP.md](docs/SETUP.md)
 
 ### Quick Start
 
-```bash
-# Generate data and train model
-make data
-make train
-
-# Deploy to Kubernetes
-make k8s-deploy-model-server
-
-# Port forward Seldon service (in separate terminal)
-make k8s-ms-port-fwd
-
-# Start UI (in another terminal)
-make run-ui
-```
-
-**Access UI:** http://localhost:8000
-
-For detailed instructions, see [QUICKSTART.md](docs/QUICKSTART.md).
+Refer [QUICKSTART.md](docs/QUICKSTART.md)
 
 ### Project Structure
 
@@ -108,6 +79,19 @@ learn-seldon-core-v1/
 ├── data/                        # Training datasets
 └── tests/                       # Unit tests
 ```
+
+## 📂 Important Files
+
+| File | Purpose |
+|------|---------|
+| `.env` | Environment variables |
+| `pyproject.toml` | Dependencies and config |
+| `src/app.py` | FastAPI UI application |
+| `src/seldon_model.py` | Seldon Core v1 Python wrapper |
+| `src/train_model.py` | Model training |
+| `models/sentiment_model.pkl` | Trained model |
+| `k8s/seldon-deployment.yaml` | Seldon Core v1 deployment |
+| `.s2i/environment` | Seldon s2i configuration |
 
 ### Commands
 
@@ -177,9 +161,9 @@ flowchart TD
 
 | Document | Description |
 |----------|-------------|
-| **[QUICKSTART.md](docs/QUICKSTART.md)** | Get started in 5 minutes |
-| **[SETUP.md](docs/SETUP.md)** | Detailed setup instructions |
-| **[TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)** | Common issues and solutions |
+| [QUICKSTART.md](docs/QUICKSTART.md) | Get started in 5 minutes |
+| [SETUP.md](docs/SETUP.md) | Detailed setup instructions |
+| [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | Common issues and solutions |
 | [ARCHITECTURE.md](docs/ARCHITECTURE.md) | System design and architecture |
 | [CONTRIBUTING.md](docs/CONTRIBUTING.md) | Contribution guidelines |
 
