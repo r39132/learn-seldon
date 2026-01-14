@@ -18,7 +18,7 @@ A production-ready ML project demonstrating three-class sentiment analysis (Posi
   - [Setup](#setup)
   - [Quick Start](#quick-start)
   - [Project Structure](#project-structure)
-  - [Commands](#commands)
+- [Commands](#commands)
 - [Architecture](#architecture)
 - [Documentation](#documentation)
 - [Troubleshooting](#troubleshooting)
@@ -43,6 +43,7 @@ This project demonstrates:
 - ✅ **Kubernetes deployment** on minikube
 - ✅ **Jupyter notebooks** for interactive exploration
 
+
 ## Development, Testing, & Deployment
 
 ### Prerequisites
@@ -60,6 +61,7 @@ Refer to [SETUP.md](docs/SETUP.md)
 ### Quick Start
 
 Refer [QUICKSTART.md](docs/QUICKSTART.md)
+
 
 ### Project Structure
 
@@ -80,7 +82,7 @@ learn-seldon-core-v1/
 └── tests/                       # Unit tests
 ```
 
-## 📂 Important Files
+### 📂 Important Files
 
 | File | Purpose |
 |------|---------|
@@ -93,7 +95,7 @@ learn-seldon-core-v1/
 | `k8s/seldon-deployment.yaml` | Seldon Core v1 deployment |
 | `.s2i/environment` | Seldon s2i configuration |
 
-### Commands
+## Commands
 
 **Development:**
 ```bash
