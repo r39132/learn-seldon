@@ -27,7 +27,7 @@ A production-ready ML project demonstrating three-class sentiment analysis (Posi
 This project demonstrates:
 - **Model Training**: Scikit-learn pipeline with TF-IDF vectorization
 - **Model Serving**: Seldon Core v1 on Kubernetes with custom Python wrapper
-- **Web Interface**: FastAPI UI for interactive sentiment analysis
+- **Web Interface**: Interactive web UI for sentiment analysis
 - **Modern Tooling**: pyenv, direnv, uv for reproducible environments
 - **Best Practices**: Type hints, testing, linting, pre-commit hooks
 
@@ -35,7 +35,7 @@ This project demonstrates:
 
 - ✅ **Three-class sentiment** (Positive/Neutral/Negative) with confidence scores
 - ✅ **Seldon Core v1** production-grade model serving
-- ✅ **FastAPI UI** for easy interaction
+- ✅ **Web UI** for easy interaction
 - ✅ **Complete automation** via Makefiles
 - ✅ **Kubernetes deployment** on minikube
 - ✅ **Jupyter notebooks** for interactive exploration
@@ -65,7 +65,7 @@ Refer [QUICKSTART.md](docs/QUICKSTART.md)
 ```
 learn-seldon-core-v1/
 ├── src/
-│   ├── sentiment_app_server.py # FastAPI UI application
+│   ├── sentiment_app_server.py # Web UI application
 │   ├── seldon_model.py         # Seldon Core v1 wrapper
 │   ├── train_model.py          # Model training script
 │   └── generate_data.py        # Training data generator
@@ -85,7 +85,7 @@ learn-seldon-core-v1/
 |------|---------|
 | `.env` | Environment variables |
 | `pyproject.toml` | Dependencies and config |
-| `src/sentiment_app_server.py` | FastAPI UI application |
+| `src/sentiment_app_server.py` | Web UI application (FastAPI) |
 | `src/seldon_model.py` | Seldon Core v1 Python wrapper |
 | `src/train_model.py` | Model training |
 | `models/sentiment_model.pkl` | Trained model |

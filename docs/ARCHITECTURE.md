@@ -21,7 +21,7 @@
 graph TB
     subgraph LocalMachine["Local Machine"]
         Browser["Web Browser<br/>http://localhost:8000"]
-        FastAPI["FastAPI UI Server<br/>Port 8000<br/>(runs locally)<br/><br/>Endpoints:<br/>GET / → Render UI<br/>POST /analyze → Sentiment<br/>GET /health → Health"]
+        WebUI["Web UI Server<br/>Port 8000<br/>(runs locally)<br/><br/>Endpoints:<br/>GET / → Render UI<br/>POST /analyze → Sentiment<br/>GET /health → Health"]
     end
 
     subgraph K8sCluster["Kubernetes Cluster (Minikube)"]
@@ -35,8 +35,8 @@ graph TB
         Pipeline -.->|Loads| Model
     end
 
-    Browser -->|HTTP POST| FastAPI
-    FastAPI -->|HTTP via port-fwd| PortFwd
+    Browser -->|HTTP POST| WebUI
+    WebUI -->|HTTP via port-fwd| PortFwd
     PortFwd -->|Routes to| Seldon
 ```
 
@@ -47,7 +47,7 @@ graph TB
 ```mermaid
 %%{init: {'theme':'neutral'}}%%
 graph TB
-    LocalUI["Local FastAPI UI<br/>localhost:8000<br/>(outside cluster)"] -.->|Port Forward<br/>localhost:8080| ClassifierSvc
+    LocalUI["Web UI Server<br/>localhost:8000<br/>(outside cluster)"] -.->|Port Forward<br/>localhost:8080| ClassifierSvc
 
     subgraph MinikubeCluster["Minikube Cluster"]
         subgraph SeldonNS["Namespace: seldon"]
@@ -90,21 +90,21 @@ flowchart TD
 %%{init: {'theme':'neutral'}}%%
 flowchart TD
     UserInput["User Input<br/>Browser: localhost:8000<br/>Enter text..."]
-    FastAPIEndpoint["FastAPI (Local)<br/>POST /analyze<br/><br/>1. Receive text<br/>2. Format Seldon request<br/>3. Call localhost:8080"]
+    WebUI["Web UI (Local)<br/>POST /analyze<br/><br/>1. Receive text<br/>2. Format Seldon request<br/>3. Call localhost:8080"]
     PortFwd["Port Forward<br/>localhost:8080 → K8s"]
     SeldonServer["Seldon Server (K8s)<br/><br/>1. Receive request<br/>2. Extract ndarray<br/>3. Call predict()"]
     MLPipeline["ML Pipeline<br/><br/>1. TF-IDF vectorize<br/>2. LogReg predict<br/>3. Return label + prob"]
     Response["Seldon Response<br/>{data: {names: ['t:0','t:1'],<br/>ndarray: [['positive', 0.95]]}}"]
-    FastAPIResponse["FastAPI renders HTML<br/>with sentiment result"]
+    WebUIResponse["Web UI renders HTML<br/>with sentiment result"]
     UserSees["Browser displays<br/>😊 Positive (95%)"]
 
-    UserInput -->|HTTP POST| FastAPIEndpoint
-    FastAPIEndpoint -->|HTTP| PortFwd
+    UserInput -->|HTTP POST| WebUI
+    WebUI -->|HTTP| PortFwd
     PortFwd -->|Routes to| SeldonServer
     SeldonServer -->|Calls| MLPipeline
     MLPipeline -->|Returns| Response
-    Response -->|JSON| FastAPIEndpoint
-    FastAPIEndpoint -->|HTML| UserSees
+    Response -->|JSON| WebUI
+    WebUI -->|HTML| UserSees
 ```
 
 ### Training Sequence Diagram
@@ -142,16 +142,16 @@ sequenceDiagram
 sequenceDiagram
     actor User
     participant Browser
-    participant FastAPI as FastAPI UI<br/>(localhost:8000)
+    participant WebUI as Web UI Server<br/>(localhost:8000)
     participant PortFwd as Port Forward<br/>(localhost:8080)
     participant K8s as Kubernetes
     participant Seldon as Seldon Server<br/>(Pod)
     participant Model as Loaded Model<br/>(in memory)
 
     User->>Browser: Enter text: "This is great!"
-    Browser->>FastAPI: POST /analyze {text: "..."}
-    FastAPI->>FastAPI: Format Seldon request<br/>{data: {ndarray: [[text]]}}
-    FastAPI->>PortFwd: POST localhost:8080/api/v1.0/predictions
+    Browser->>WebUI: POST /analyze {text: "..."}
+    WebUI->>WebUI: Format Seldon request<br/>{data: {ndarray: [[text]]}}
+    WebUI->>PortFwd: POST localhost:8080/api/v1.0/predictions
     PortFwd->>K8s: Forward to seldon namespace
     K8s->>Seldon: Route to classifier pod
 
@@ -166,17 +166,18 @@ sequenceDiagram
     Model-->>Seldon: ("positive", 0.95)
     Seldon-->>K8s: {data: {names: ["t:0","t:1"],<br/>ndarray: [["positive", 0.95]]}}
     K8s-->>PortFwd: Response
-    PortFwd-->>FastAPI: JSON response
-    FastAPI->>FastAPI: Parse sentiment from response
-    FastAPI-->>Browser: Render HTML with result
+    PortFwd-->>WebUI: JSON response
+    WebUI->>WebUI: Parse sentiment from response
+    WebUI-->>Browser: Render HTML with result
     Browser-->>User: Display: 😊 Positive (95%)
 ```
 
 ## Component Details
 
-### FastAPI Application (Local Only)
+### Web UI Server (Local)
 
 **File:** `src/sentiment_app_server.py`
+**Implementation:** FastAPI
 
 **Runs:** Locally via `make run-ui` (port 8000)
 
@@ -241,7 +242,7 @@ sequenceDiagram
 - **Data:** pandas, numpy
 - **Serialization:** joblib
 
-### Web Stack
+### Web UI Stack
 - **Framework:** FastAPI
 - **Server:** Uvicorn
 - **Templates:** Jinja2
@@ -279,7 +280,7 @@ sequenceDiagram
 - Memory: 256Mi request, 512Mi limit
 - Defined in: k8s/seldon-deployment.yaml
 
-**Local FastAPI UI:**
+**Local Web UI Server:**
 - Runs outside cluster (no K8s resources)
 - Minimal overhead (~50-100MB RAM)
 
@@ -299,7 +300,7 @@ Then apply:
 make k8s-deploy-model-server
 ```
 
-**Note:** FastAPI UI runs locally and is not deployed to K8s, so it doesn't scale horizontally in the cluster.
+**Note:** The Web UI Server runs locally and is not deployed to K8s, so it doesn't scale horizontally in the cluster.
 
 ### Performance
 
