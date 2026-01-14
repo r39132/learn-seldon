@@ -3,7 +3,7 @@
 ## Table of Contents
 
 - [System Architecture](#system-architecture)
-- [Deployment Architectures](#deployment-architectures)
+- [Deployment Architecture](#deployment-architecture)
 - [Data Flow](#data-flow)
 - [Component Details](#component-details)
 - [Technology Stack](#technology-stack)
@@ -19,87 +19,51 @@
 ```mermaid
 %%{init: {'theme':'neutral'}}%%
 graph TB
-    subgraph UI["User Interface"]
-        Browser["Web Browser<br/>HTML/CSS/JS Frontend<br/>- Text Input Area<br/>- Submit Button<br/>- Sentiment Result Display"]
+    subgraph LocalMachine["Local Machine"]
+        Browser["Web Browser<br/>http://localhost:8000"]
+        FastAPI["FastAPI UI Server<br/>Port 8000<br/>(runs locally)<br/><br/>Endpoints:<br/>GET / → Render UI<br/>POST /analyze → Sentiment<br/>GET /health → Health"]
     end
 
-    subgraph AppLayer["Application Layer"]
-        FastAPI["FastAPI Web Server<br/>Port 8000<br/><br/>Endpoints:<br/>GET / → Render UI<br/>POST /analyze → Analyze sentiment<br/>GET /health → Health check"]
+    subgraph K8sCluster["Kubernetes Cluster (Minikube)"]
+        PortFwd["Port Forward<br/>localhost:8080 → 8000"]
+        Seldon["Seldon Model Server<br/>Port 8000<br/><br/>SentimentClassifier<br/>- predict()<br/>- predict_proba()<br/>- health_status()"]
+
+        Pipeline["ML Pipeline<br/>TF-IDF → LogReg"]
+        Model["Model File<br/>/mnt/models/<br/>sentiment_model.pkl"]
+
+        Seldon --> Pipeline
+        Pipeline -.->|Loads| Model
     end
 
-    subgraph ModelLayer["Model Serving Layer"]
-        Seldon["Seldon Core Model Server<br/>Port 9000<br/><br/>SentimentClassifier Wrapper<br/>- predict()<br/>- predict_proba()<br/>- health_status()"]
-    end
-
-    subgraph MLLayer["ML Model Layer"]
-        Pipeline["Scikit-Learn Pipeline"]
-        TFIDF["TF-IDF Vectorizer<br/>max_features: 5000<br/>ngram_range: 1,2"]
-        LogReg["Logistic Regression<br/>binary classification<br/>positive/negative<br/>max_iter: 1000"]
-
-        Pipeline --> TFIDF
-        TFIDF --> LogReg
-    end
-
-    subgraph DataLayer["Data Layer"]
-        Model["Stored Model:<br/>models/sentiment_model.pkl"]
-        Data["Training Data:<br/>data/raw/sentiment_data.csv"]
-    end
-
-    Browser -->|HTTP POST /analyze| FastAPI
-    FastAPI -->|REST API Call| Seldon
-    Seldon -->|Load & Predict| Pipeline
-    Pipeline -.->|Uses| Model
+    Browser -->|HTTP POST| FastAPI
+    FastAPI -->|HTTP via port-fwd| PortFwd
+    PortFwd -->|Routes to| Seldon
 ```
 
-## Deployment Architectures
-
-### Local Development
-
-```mermaid
-%%{init: {'theme':'neutral'}}%%
-graph TB
-    subgraph DevMachine["Developer Machine - macOS"]
-        subgraph VirtualEnv[".venv Virtual Environment"]
-            FastAPIApp["FastAPI App<br/>Port 8000"]
-            TrainedModel["Trained Model<br/>sentiment_model.pkl"]
-        end
-
-        Tools["Tools:<br/>- pyenv Python 3.12.3<br/>- uv package manager<br/>- Jupyter notebooks"]
-    end
-
-    VirtualEnv -.->|Uses| Tools
-```
+## Deployment Architecture
 
 ### Kubernetes Deployment (Minikube)
 
 ```mermaid
 %%{init: {'theme':'neutral'}}%%
 graph TB
+    LocalUI["Local FastAPI UI<br/>localhost:8000<br/>(outside cluster)"] -.->|Port Forward<br/>localhost:8080| ClassifierSvc
+
     subgraph MinikubeCluster["Minikube Cluster"]
         subgraph SeldonNS["Namespace: seldon"]
-            subgraph FastAPIDeploy["FastAPI Deployment"]
-                UIPod["Pod: sentiment-ui<br/>Container: fastapi<br/>Port: 8000<br/>Image: sentiment-ui:latest"]
-                UISvc["Service: sentiment-ui<br/>NodePort: 30080"]
-                UIPod --> UISvc
-            end
+            SeldonDeployment["SeldonDeployment:<br/>sentiment-classifier"]
+            ClassifierPod["Pod: sentiment-classifier<br/>Containers:<br/>- classifier (port 8000)<br/>- seldon-container-engine<br/>Volume: /mnt/models"]
+            ClassifierSvc["Service:<br/>sentiment-classifier-default<br/>Port 8000"]
 
-            subgraph SeldonDeploy["Seldon Deployment"]
-                SeldonDeployment["SeldonDeployment:<br/>sentiment-classifier"]
-                ClassifierPod["Pod: classifier<br/>Container: classifier<br/>Port: 9000<br/>Image: sentiment-classifier:latest<br/>Volume: /mnt/models"]
-                ClassifierSvc["Service:<br/>sentiment-classifier-default"]
-
-                SeldonDeployment --> ClassifierPod
-                ClassifierPod --> ClassifierSvc
-            end
-
-            UISvc -->|HTTP| ClassifierSvc
+            SeldonDeployment --> ClassifierPod
+            ClassifierPod --> ClassifierSvc
         end
 
         subgraph SeldonSystem["Namespace: seldon-system"]
-            Operator["Seldon Core Operator<br/>Controller Manager"]
+            Operator["Seldon Core Operator<br/>v1.17.1"]
         end
 
-        Operator -.->|Manages| SeldonDeploy
+        Operator -.->|Manages| SeldonDeployment
     end
 ```
 
@@ -125,40 +89,48 @@ flowchart TD
 ```mermaid
 %%{init: {'theme':'neutral'}}%%
 flowchart TD
-    UserInput["User Input<br/>'Text...'"]
-    FastAPIEndpoint["FastAPI Endpoint<br/>POST /analyze<br/><br/>1. Receive text<br/>2. Format request<br/>3. Call Seldon API"]
-    SeldonServer["Seldon Model Server<br/><br/>1. Receive request<br/>2. Extract text<br/>3. Call predict()"]
-    MLPipeline["ML Pipeline<br/><br/>1. TF-IDF transform<br/>2. Logistic regression<br/>3. Return prediction"]
-    Response["Response<br/>{<br/>  'sentiment': 'positive',<br/>  'text': '...'<br/>}"]
-    FastAPIResponse["FastAPI Response<br/><br/>Render HTML with result"]
-    UserSees["User sees<br/>😊 Positive"]
+    UserInput["User Input<br/>Browser: localhost:8000<br/>Enter text..."]
+    FastAPIEndpoint["FastAPI (Local)<br/>POST /analyze<br/><br/>1. Receive text<br/>2. Format Seldon request<br/>3. Call localhost:8080"]
+    PortFwd["Port Forward<br/>localhost:8080 → K8s"]
+    SeldonServer["Seldon Server (K8s)<br/><br/>1. Receive request<br/>2. Extract ndarray<br/>3. Call predict()"]
+    MLPipeline["ML Pipeline<br/><br/>1. TF-IDF vectorize<br/>2. LogReg predict<br/>3. Return label + prob"]
+    Response["Seldon Response<br/>{data: {names: ['t:0','t:1'],<br/>ndarray: [['positive', 0.95]]}}"]
+    FastAPIResponse["FastAPI renders HTML<br/>with sentiment result"]
+    UserSees["Browser displays<br/>😊 Positive (95%)"]
 
     UserInput -->|HTTP POST| FastAPIEndpoint
-    FastAPIEndpoint -->|REST API| SeldonServer
-    SeldonServer -->|Load model & predict| MLPipeline
-    MLPipeline -->|Prediction| Response
-    Response -->|JSON response| FastAPIResponse
-    FastAPIResponse -->|HTML| UserSees
+    FastAPIEndpoint -->|HTTP| PortFwd
+    PortFwd -->|Routes to| SeldonServer
+    SeldonServer -->|Calls| MLPipeline
+    MLPipeline -->|Returns| Response
+    Response -->|JSON| FastAPIEndpoint
+    FastAPIEndpoint -->|HTML| UserSees
 ```
 
 ## Component Details
 
-### FastAPI Application
+### FastAPI Application (Local Only)
 
 **File:** `src/app.py`
 
+**Runs:** Locally via `make run-ui` (port 8000)
+
 **Responsibilities:**
-- Serve web UI
-- Handle user requests
-- Call Seldon API
-- Format responses
-- Error handling
+- Serve web UI to browser
+- Handle user sentiment analysis requests
+- Connect to Seldon in K8s via port-forward (localhost:8080)
+- Format Seldon API requests/responses
+- Error handling and display
 
 **Key Functions:**
-- `home()` - Render UI
-- `analyze_sentiment()` - Handle analysis
-- `call_seldon_api()` - Call model server
-- `health_check()` - Health endpoint
+- `home()` - Render HTML UI
+- `analyze_sentiment()` - POST /analyze endpoint
+- `call_seldon_api()` - Call Seldon via SELDON_HOST:SELDON_PORT
+- `health_check()` - GET /health endpoint
+
+**Environment Variables:**
+- `SELDON_HOST` - Default: localhost
+- `SELDON_PORT` - Default: 8080 (port-forward target)
 
 ### Seldon Model Wrapper
 
@@ -237,28 +209,32 @@ flowchart TD
 
 ### Container Resources
 
-**FastAPI Container:**
-- Requests: 250m CPU, 256Mi RAM
-- Limits: 500m CPU, 512Mi RAM
+**Seldon Classifier Container:**
+- CPU: 100m request, 500m limit
+- Memory: 256Mi request, 512Mi limit
+- Defined in: k8s/seldon-deployment.yaml
 
-**Seldon Model Container:**
-- Requests: 500m CPU, 512Mi RAM
-- Limits: 1000m CPU, 1Gi RAM
+**Local FastAPI UI:**
+- Runs outside cluster (no K8s resources)
+- Minimal overhead (~50-100MB RAM)
 
 ## Scaling Considerations
 
 ### Horizontal Scaling
 
-**FastAPI UI:**
-```bash
-kubectl scale deployment sentiment-ui -n seldon --replicas=3
-```
-
-**Seldon Model:**
+**Seldon Model Server:**
 Edit `k8s/seldon-deployment.yaml`:
 ```yaml
-replicas: 3
+spec:
+  replicas: 3  # Scale to 3 pods
 ```
+
+Then apply:
+```bash
+make k8s-deploy-model-server
+```
+
+**Note:** FastAPI UI runs locally and is not deployed to K8s, so it doesn't scale horizontally in the cluster.
 
 ### Performance
 
