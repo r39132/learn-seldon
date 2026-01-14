@@ -8,7 +8,7 @@
 
 A production-ready ML project demonstrating three-class sentiment analysis (Positive/Neutral/Negative) with model training, deployment, and serving using **Seldon Core v1** on Kubernetes.
 
-> **⚠️ Educational Purpose**: The sentiment analysis model is intentionally simple (Logistic Regression with TF-IDF) to focus on Seldon Core v1 deployment patterns rather than state-of-the-art NLP.
+> **Note**: The sentiment analysis model is intentionally simple (Logistic Regression with TF-IDF) to focus on Seldon Core v1 deployment patterns rather than state-of-the-art NLP.
 
 ## Table of Contents
 
@@ -17,10 +17,13 @@ A production-ready ML project demonstrating three-class sentiment analysis (Posi
   - [Prerequisites](#prerequisites)
   - [Setup](#setup)
   - [Quick Start](#quick-start)
-  - [Project Structure](#project-structure)
+- [Project Structure](#project-structure)
 - [Commands](#commands)
 - [Architecture](#architecture)
 - [Documentation](#documentation)
+
+## Overview
+
 This project demonstrates:
 - **Model Training**: Scikit-learn pipeline with TF-IDF vectorization
 - **Model Serving**: Seldon Core v1 on Kubernetes with custom Python wrapper
@@ -57,7 +60,7 @@ Refer to [SETUP.md](docs/SETUP.md)
 Refer [QUICKSTART.md](docs/QUICKSTART.md)
 
 
-### Project Structure
+## Project Structure
 
 ```
 learn-seldon-core-v1/
@@ -118,40 +121,8 @@ make stop-ui                   # Stop UI server
 **All commands:** Run `make help`
 
 ## Architecture
+Refer to [ARCHITECTURE.md](docs/ARCHITECTURE.md)
 
-### Model Serving Flow
-
-```mermaid
-%%{init: {'theme':'neutral'}}%%
-flowchart TD
-    Browser["User Browser"]
-    FastAPI["FastAPI UI<br/>localhost:8000"]
-    SeldonAPI["Seldon Core API<br/>localhost:8080"]
-    SeldonDeploy["SeldonDeployment<br/>Kubernetes"]
-    ModelContainer["Model Container<br/>sentiment-seldon"]
-    Wrapper["SentimentClassifier<br/>Wrapper"]
-    Model["Scikit-learn Model<br/>Logistic Regression + TF-IDF"]
-
-    Browser --> FastAPI
-    FastAPI --> SeldonAPI
-    SeldonAPI --> SeldonDeploy
-    SeldonDeploy --> ModelContainer
-    ModelContainer --> Wrapper
-    Wrapper --> Model
-```
-
-**Key Components:**
-
-- **Seldon Core v1** - Model serving framework with CRD-based deployment
-- **SeldonDeployment** - Kubernetes custom resource defining inference graph
-- **Service Orchestrator** - Request routing and model execution
-- **SentimentClassifier** - Python wrapper implementing Seldon API
-- **FastAPI UI** - Web interface for user interaction
-
-**Model Architecture:**
-- Logistic Regression classifier
-- TF-IDF vectorization (5000 features, 1-5 n-grams)
-- Three sentiment classes: Positive, Neutral, Negative
 
 ## Documentation
 

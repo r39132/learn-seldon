@@ -8,9 +8,10 @@ This guide covers common issues and solutions for the Sentiment Analyzer project
 - [Docker and Kubernetes Setup](#docker-and-kubernetes-setup)
 - [Python Environment Issues](#python-environment-issues)
 - [Runtime Issues](#runtime-issues)
+- [Port Conflicts](#port-conflicts)
 - [Kubernetes Issues](#kubernetes-issues)
 - [Seldon Core Issues](#seldon-core-issues)
-- [Port Conflicts](#port-conflicts)
+- [Getting More Help](#getting-more-help)
 
 ---
 
