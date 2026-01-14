@@ -1,5 +1,12 @@
 # Quick Reference Guide
 
+## Table of Contents
+
+- [🚀 Common Commands](#-common-commands)
+- [📂 Important Files](#-important-files)
+- [🐛 Troubleshooting](#-troubleshooting)
+- [📊 Kubernetes Commands](#-kubernetes-commands)
+
 ## 🚀 Common Commands
 
 ### Initial Setup

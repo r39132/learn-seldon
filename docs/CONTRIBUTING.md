@@ -2,6 +2,14 @@
 
 Thank you for your interest in contributing! This document provides guidelines for contributing to the project.
 
+## Table of Contents
+
+- [Development Setup](#development-setup)
+- [Development Workflow](#development-workflow)
+- [Code Style](#code-style)
+- [Testing](#testing)
+- [Questions?](#questions)
+
 ## Development Setup
 
 1. Fork the repository

@@ -2,6 +2,22 @@
 
 Get up and running with the Sentiment Analyzer in minutes.
 
+## Table of Contents
+
+- [Prerequisites](#prerequisites)
+- [Step 1: Setup](#step-1-setup)
+- [Step 2: Generate Data and Train Model](#step-2-generate-data-and-train-model)
+- [Step 3: Deploy to Kubernetes](#step-3-deploy-to-kubernetes)
+- [Step 4: Test the Model Server](#step-4-test-the-model-server)
+- [Step 5: Run the UI](#step-5-run-the-ui)
+- [Step 6: View Logs and Monitor](#step-6-view-logs-and-monitor)
+- [Common Commands](#common-commands)
+- [Clean Up](#clean-up)
+- [Next Steps](#next-steps)
+- [Troubleshooting](#troubleshooting)
+- [Learning Resources](#learning-resources)
+- [API Reference](#api-reference)
+
 ## Prerequisites
 
 - macOS with [Homebrew](https://brew.sh) installed

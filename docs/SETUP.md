@@ -2,6 +2,21 @@
 
 Complete guide for setting up your development environment for this project.
 
+## Table of Contents
+
+- [Overview](#overview)
+- [Setup Guide (macOS)](#setup-guide-macos)
+  - [Step 1: Install Homebrew](#step-1-install-homebrew)
+  - [Step 2: Clone Repository and Run Setup](#step-2-clone-repository-and-run-setup)
+  - [Step 3: Configure Shell Integration](#step-3-configure-shell-integration)
+  - [Step 4: Restart Terminal and Activate Environment](#step-4-restart-terminal-and-activate-environment)
+  - [Step 5: Install Docker Desktop](#step-5-install-docker-desktop)
+  - [Step 6: Set up Kubernetes (minikube)](#step-6-set-up-kubernetes-minikube)
+- [Tool Configuration Files](#tool-configuration-files)
+- [Environment Variables](#environment-variables)
+- [Best Practices](#best-practices)
+- [Additional Resources](#additional-resources)
+
 ## Overview
 
 This project uses modern Python development tools and best practices:

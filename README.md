@@ -10,6 +10,21 @@ A production-ready ML project demonstrating three-class sentiment analysis (Posi
 
 > **⚠️ Educational Purpose**: The sentiment analysis model is intentionally simple (Logistic Regression with TF-IDF) to focus on Seldon Core v1 deployment patterns rather than state-of-the-art NLP.
 
+## Table of Contents
+
+- [Overview](#overview)
+- [Development, Testing, & Deployment](#development-testing--deployment)
+  - [Prerequisites](#prerequisites)
+  - [Setup](#setup)
+  - [Quick Start](#quick-start)
+  - [Project Structure](#project-structure)
+  - [Commands](#commands)
+- [Architecture](#architecture)
+- [Documentation](#documentation)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Overview
 
 This project demonstrates:

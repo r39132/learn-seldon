@@ -1,5 +1,17 @@
 # Architecture Documentation
 
+## Table of Contents
+
+- [System Architecture](#system-architecture)
+- [Deployment Architectures](#deployment-architectures)
+- [Data Flow](#data-flow)
+- [Component Details](#component-details)
+- [Technology Stack](#technology-stack)
+- [Resource Requirements](#resource-requirements)
+- [Scaling Considerations](#scaling-considerations)
+- [Security](#security)
+- [Monitoring & Observability](#monitoring--observability)
+
 ## System Architecture
 
 ### High-Level Architecture

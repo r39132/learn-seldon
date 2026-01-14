@@ -2,6 +2,16 @@
 
 This document summarizes the changes made to implement Seldon Core v1 in the learn-seldon-core-v1 repository.
 
+## Table of Contents
+
+- [What Changed](#what-changed)
+- [Two Deployment Options](#two-deployment-options)
+- [How to Use Seldon Deployment](#how-to-use-seldon-deployment)
+- [Key Differences: Seldon vs FastAPI](#key-differences-seldon-vs-fastapi)
+- [Verification](#verification)
+- [Files Created/Modified](#files-createdmodified)
+- [Next Steps](#next-steps)
+
 ## What Changed
 
 ### 1. Core Implementation Files
