@@ -21,9 +21,6 @@ A production-ready ML project demonstrating three-class sentiment analysis (Posi
 - [Commands](#commands)
 - [Architecture](#architecture)
 - [Documentation](#documentation)
-- [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Overview
 
@@ -168,25 +165,6 @@ flowchart TD
 | [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | Common issues and solutions |
 | [ARCHITECTURE.md](docs/ARCHITECTURE.md) | System design and architecture |
 | [CONTRIBUTING.md](docs/CONTRIBUTING.md) | Contribution guidelines |
-
-## Troubleshooting
-
-Having issues? See [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md).
-
-**Quick fixes:**
-- [Tool installation problems](docs/TROUBLESHOOTING.md#tool-installation-issues)
-- [Model server errors](docs/TROUBLESHOOTING.md#seldon-core-issues)
-- [Kubernetes issues](docs/TROUBLESHOOTING.md#kubernetes-issues)
-- [Port conflicts](docs/TROUBLESHOOTING.md#port-conflicts)
-## Contributing
-
-See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for guidelines.
-
-## License
-
-Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for details.
-
-This project is for educational purposes. See [CODE_OF_CONDUCT.md](docs/CODE_OF_CONDUCT.md) for community guidelines.
 
 ---
 
