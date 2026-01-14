@@ -1,4 +1,4 @@
-.PHONY: help setup install test lint format clean run train data docker-build k8s-deploy k8s-clean stop restart
+.PHONY: help setup install test lint format clean run train data docker-build k8s-deploy k8s-clean stop restart validate-setup
 
 help: ## Show this help message
 	@echo 'Usage: make [target]'
@@ -133,5 +133,36 @@ pre-commit-install: ## Install pre-commit hooks
 validate: ## Validate project configuration and data
 	@echo "✅ Running project validation..."
 	@python scripts/validate.py
+
+validate-setup: ## Verify development environment setup
+	@echo "🔍 Verifying Development Environment Setup"
+	@echo "=========================================="
+	@echo ""
+	@echo "📦 Checking installed tools..."
+	@echo ""
+	@echo -n "Python version: "
+	@python --version 2>/dev/null || echo "❌ Not found"
+	@echo -n "Java version: "
+	@java -version 2>&1 | head -n 1 || echo "❌ Not found"
+	@echo -n "uv: "
+	@uv --version 2>/dev/null || echo "❌ Not found"
+	@echo -n "gh: "
+	@gh --version 2>/dev/null | head -n 1 || echo "❌ Not found"
+	@echo -n "Docker: "
+	@docker --version 2>/dev/null || echo "⚠️  Not found (optional for local dev)"
+	@echo -n "kubectl: "
+	@kubectl version --client 2>/dev/null | head -n 1 || echo "⚠️  Not found (optional for k8s)"
+	@echo -n "minikube: "
+	@minikube version 2>/dev/null | head -n 1 || echo "⚠️  Not found (optional for k8s)"
+	@echo ""
+	@echo "🐍 Checking Python dependencies..."
+	@python -c "import fastapi; import sklearn; print('✅ Core dependencies installed')" 2>/dev/null || echo "❌ Dependencies missing - run 'make install'"
+	@echo ""
+	@echo "🔧 Checking pre-commit hooks..."
+	@pre-commit run --all-files --show-diff-on-failure 2>&1 | head -n 20 || echo "⚠️  Pre-commit hooks not configured"
+	@echo ""
+	@echo "=========================================="
+	@echo "✅ Setup verification complete"
+	@echo "Run 'make validate' to check project data"
 
 .DEFAULT_GOAL := help

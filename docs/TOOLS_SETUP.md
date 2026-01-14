@@ -16,12 +16,15 @@ This project uses modern Python development tools and best practices:
 - **kubectl** - Kubernetes CLI
 - **minikube** - Local Kubernetes cluster
 
-## macOS Installation Guide
+## Setup Guide (macOS)
 
-### 1. Homebrew (Package Manager)
+Follow these steps in order to set up your development environment.
+
+### Step 1: Install Homebrew
+
+Homebrew is required for all subsequent installations:
 
 ```bash
-# Install Homebrew if not already installed
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 # Add to PATH (Apple Silicon)
@@ -29,133 +32,83 @@ echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
 eval "$(/opt/homebrew/bin/brew shellenv)"
 ```
 
-### 2. pyenv (Python Version Manager)
+### Step 2: Clone Repository and Run Setup
 
 ```bash
-# Install pyenv
-brew install pyenv
+# Clone repository (if using GitHub)
+gh repo clone <username>/learn-seldon-core-v1
+cd learn-seldon-core-v1
 
-# Add to shell configuration (~/.zshrc or ~/.bash_profile)
-echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
-echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
-echo 'eval "$(pyenv init --path)"' >> ~/.zshrc
-echo 'eval "$(pyenv init -)"' >> ~/.zshrc
-
-# Reload shell
-source ~/.zshrc
-
-# Install Python 3.12.3
-pyenv install 3.12.3
-pyenv global 3.12.3
-
-# Verify installation
-python --version  # Should show: Python 3.12.3
+# Run automated setup
+make setup
 ```
 
-### 3. jenv (Java Version Manager)
+**What `make setup` installs and configures:**
+- Installs missing tools: pyenv, jenv, direnv, uv, gh, Java 17
+- Configures Python 3.12.3 with pyenv
+- Creates virtual environment with uv
+- Installs all Python dependencies (including dev dependencies)
+- Sets up pre-commit hooks
+- Generates training data
+- Trains the initial model
+
+### Step 3: Configure Shell Integration
+
+Add these hooks to your shell configuration file:
 
 ```bash
-# Install jenv
-brew install jenv
+# Add to ~/.zshrc (for zsh) or ~/.bash_profile (for bash)
 
-# Add to shell configuration
-echo 'export PATH="$HOME/.jenv/bin:$PATH"' >> ~/.zshrc
-echo 'eval "$(jenv init -)"' >> ~/.zshrc
+# pyenv
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init --path)"
+eval "$(pyenv init -)"
 
-# Reload shell
-source ~/.zshrc
+# jenv
+export PATH="$HOME/.jenv/bin:$PATH"
+eval "$(jenv init -)"
 
-# Install Java 17 (required for Seldon)
-brew install openjdk@17
-
-# Add to jenv
-jenv add /opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
-
-# Set global version
-jenv global 17
-
-# Verify installation
-java -version  # Should show: openjdk version "17.x.x"
+# direnv
+eval "$(direnv hook zsh)"  # or: eval "$(direnv hook bash)" for bash
 ```
 
-### 4. direnv (Environment Variable Manager)
+### Step 4: Restart Terminal and Activate Environment
 
 ```bash
-# Install direnv
-brew install direnv
+# Close and reopen your terminal, then:
+cd learn-seldon-core-v1
 
-# Add to shell configuration
-echo 'eval "$(direnv hook zsh)"' >> ~/.zshrc  # for zsh
-# OR
-echo 'eval "$(direnv hook bash)"' >> ~/.bash_profile  # for bash
-
-# Reload shell
-source ~/.zshrc
-
-# Allow direnv in project directory
-cd /path/to/learn-seldon-core-v1
+# Allow direnv to load environment variables
 direnv allow .
+
+# Activate virtual environment
+source .venv/bin/activate
 ```
 
-**Usage:**
-- `direnv allow` - Allow .envrc in current directory
-- `direnv deny` - Block .envrc in current directory
-- `direnv reload` - Reload environment variables
-- When you `cd` into the project, direnv automatically loads environment variables
+### Step 5: Install Kubernetes Tools (Optional)
 
-### 5. uv (Fast Python Package Manager)
+Only needed if you plan to deploy to Kubernetes:
 
-```bash
-# Install uv
-brew install uv
-
-# Verify installation
-uv --version
-```
-
-**Why uv?**
-- 10-100x faster than pip
-- Better dependency resolution
-- Drop-in replacement for pip/pip-tools
-- Used by this project for all package management
-
-### 6. GitHub CLI
-
-```bash
-# Install gh
-brew install gh
-
-# Authenticate with GitHub
-gh auth login
-
-# Verify installation
-gh --version
-
-# Configure git to use gh
-gh auth setup-git
-```
-
-### 7. Docker Desktop
+#### Docker Desktop
 
 ```bash
 # Install Docker Desktop
 brew install --cask docker
 
-# Start Docker Desktop from Applications
-# Or use command line:
+# Start Docker Desktop
 open -a Docker
 
 # Verify installation
 docker --version
-docker-compose --version
 ```
 
-**Post-installation:**
+**Configuration:**
 1. Open Docker Desktop
 2. Go to Preferences → Resources
-3. Allocate at least 4GB RAM and 2 CPUs for Kubernetes
+3. Allocate at least 4GB RAM and 2 CPUs
 
-### 8. kubectl (Kubernetes CLI)
+#### kubectl
 
 ```bash
 # Install kubectl
@@ -165,7 +118,7 @@ brew install kubectl
 kubectl version --client
 ```
 
-### 9. minikube (Local Kubernetes)
+#### minikube
 
 ```bash
 # Install minikube
@@ -181,52 +134,6 @@ minikube addons enable metrics-server
 minikube status
 kubectl get nodes
 ```
-
-### 10. Additional Development Tools
-
-```bash
-# Install helpful tools
-brew install tree     # Directory tree visualization
-brew install jq       # JSON processor
-brew install htop     # Process viewer
-brew install watch    # Execute commands periodically
-```
-
-## Project Setup
-
-Once all tools are installed, set up the project:
-
-```bash
-# Clone repository (if using GitHub)
-gh repo clone <username>/learn-seldon-core-v1
-cd learn-seldon-core-v1
-
-# Run automated setup (installs tools, creates venv, installs deps, generates data, trains model)
-make setup
-
-# If new tools were installed, restart your terminal and allow direnv
-direnv allow .
-
-# Activate virtual environment
-source .venv/bin/activate
-
-# Verify setup
-make help
-```
-
-**What `make setup` does:**
-- Installs missing tools: pyenv, jenv, direnv, uv, gh, Java 17
-- Configures Python 3.12.3 with pyenv
-- Creates virtual environment with uv
-- Installs all Python dependencies (including dev dependencies)
-- Sets up pre-commit hooks
-- Generates training data
-- Trains the initial model
-
-**Manual steps only needed:**
-1. If new tools were installed, add them to your shell config and restart terminal
-2. Run `direnv allow .` to load environment variables
-3. Activate the virtual environment
 
 ## Tool Configuration Files
 
@@ -261,90 +168,33 @@ cp .env-example .env
 # Edit .env with your custom values
 ```
 
-## Verifying Your Setup
+### Step 6: Verify Setup
 
-Run this comprehensive check:
-
-```bash
-# Python version
-python --version          # Should be 3.12.3
-
-# Java version
-java -version            # Should be 17.x.x
-
-# Package manager
-uv --version             # Should show uv version
-
-# GitHub CLI
-gh --version             # Should show gh version
-
-# Docker
-docker --version         # Should show Docker version
-
-# Kubernetes
-kubectl version --client # Should show kubectl version
-minikube status          # Should show "Running"
-
-# Project dependencies
-python -c "import fastapi; import sklearn; print('✅ Dependencies OK')"
-
-# Pre-commit hooks
-pre-commit run --all-files  # Should run all hooks
-```
-
-## Common Issues and Solutions
-
-### pyenv: "python: command not found"
+Run the automated verification:
 
 ```bash
-# Ensure pyenv is in PATH
-export PATH="$HOME/.pyenv/bin:$PATH"
-eval "$(pyenv init --path)"
-eval "$(pyenv init -)"
+# Verify development environment (tools and dependencies)
+make validate-setup
+
+# Validate project configuration and data
+make validate
 ```
 
-### jenv: "java: command not found"
+**What `make validate-setup` checks:**
+- Python version (should be 3.12.3)
+- Java version (should be 17.x.x)
+- Package managers (uv, gh)
+- Docker and Kubernetes tools (optional - only if installed in Step 5)
+- Python dependencies
+- Pre-commit hooks
 
-```bash
-# Add Java to jenv
-jenv add /opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
-jenv global 17
-```
+**What `make validate` checks:**
+- Configuration files exist (.python-version, .java-version, .envrc, etc.)
+- Documentation files exist
+- Python environment compatibility
+- Training data quality and balance
 
-### direnv: "direnv: error .envrc is blocked"
-
-```bash
-# Allow direnv in the project directory
-direnv allow .
-```
-
-### uv: "command not found"
-
-```bash
-# Install uv via brew
-brew install uv
-
-# Or use pip
-pip install uv
-```
-
-### Docker: "Cannot connect to the Docker daemon"
-
-```bash
-# Ensure Docker Desktop is running
-open -a Docker
-
-# Wait for Docker to start, then verify
-docker ps
-```
-
-### minikube: "Exiting due to MK_USAGE: Docker driver with privileged mode"
-
-```bash
-# Use Docker driver explicitly
-minikube delete
-minikube start --driver=docker
-```
+> **Having issues?** See [TROUBLESHOOTING_SETUP.md](TROUBLESHOOTING_SETUP.md) for common problems and solutions.
 
 ## Updating Tools
 
