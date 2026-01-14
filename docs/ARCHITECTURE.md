@@ -107,6 +107,71 @@ flowchart TD
     FastAPIEndpoint -->|HTML| UserSees
 ```
 
+### Training Sequence Diagram
+
+```mermaid
+%%{init: {'theme':'neutral'}}%%
+sequenceDiagram
+    actor User
+    participant Make as make train
+    participant Script as train_model.py
+    participant Data as CSV File
+    participant Pipeline as Sklearn Pipeline
+    participant Model as sentiment_model.pkl
+
+    User->>Make: make train
+    Make->>Script: python src/train_model.py
+    Script->>Data: Load data/raw/sentiment_data.csv
+    Data-->>Script: 1000 text samples + labels
+    Script->>Script: Split train/test (80/20)
+    Script->>Pipeline: Create Pipeline<br/>(TF-IDF + LogReg)
+    Script->>Pipeline: pipeline.fit(X_train, y_train)
+    Pipeline-->>Script: Trained model
+    Script->>Script: Evaluate on test set
+    Script->>Script: Print accuracy, F1 score
+    Script->>Model: joblib.dump(pipeline, path)
+    Model-->>Script: Model saved
+    Script-->>Make: Training complete
+    Make-->>User: ✓ Model trained successfully
+```
+
+### Serving Sequence Diagram
+
+```mermaid
+%%{init: {'theme':'neutral'}}%%
+sequenceDiagram
+    actor User
+    participant Browser
+    participant FastAPI as FastAPI UI<br/>(localhost:8000)
+    participant PortFwd as Port Forward<br/>(localhost:8080)
+    participant K8s as Kubernetes
+    participant Seldon as Seldon Server<br/>(Pod)
+    participant Model as Loaded Model<br/>(in memory)
+
+    User->>Browser: Enter text: "This is great!"
+    Browser->>FastAPI: POST /analyze {text: "..."}
+    FastAPI->>FastAPI: Format Seldon request<br/>{data: {ndarray: [[text]]}}
+    FastAPI->>PortFwd: POST localhost:8080/api/v1.0/predictions
+    PortFwd->>K8s: Forward to seldon namespace
+    K8s->>Seldon: Route to classifier pod
+
+    alt Model not loaded
+        Seldon->>Seldon: joblib.load(/mnt/models/sentiment_model.pkl)
+        Seldon->>Model: Model loaded in memory
+    end
+
+    Seldon->>Model: predict([[text]])
+    Model->>Model: TF-IDF transform
+    Model->>Model: LogReg predict
+    Model-->>Seldon: ("positive", 0.95)
+    Seldon-->>K8s: {data: {names: ["t:0","t:1"],<br/>ndarray: [["positive", 0.95]]}}
+    K8s-->>PortFwd: Response
+    PortFwd-->>FastAPI: JSON response
+    FastAPI->>FastAPI: Parse sentiment from response
+    FastAPI-->>Browser: Render HTML with result
+    Browser-->>User: Display: 😊 Positive (95%)
+```
+
 ## Component Details
 
 ### FastAPI Application (Local Only)
