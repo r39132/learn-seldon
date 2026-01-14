@@ -128,10 +128,10 @@ Refer to [ARCHITECTURE.md](docs/ARCHITECTURE.md)
 
 | Document | Description |
 |----------|-------------|
-| [QUICKSTART.md](docs/QUICKSTART.md) | Get started in 5 minutes |
 | [SETUP.md](docs/SETUP.md) | Detailed setup instructions |
-| [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | Common issues and solutions |
+| [QUICKSTART.md](docs/QUICKSTART.md) | Get started in 5 minutes |
 | [ARCHITECTURE.md](docs/ARCHITECTURE.md) | System design and architecture |
+| [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | Common issues and solutions |
 
 
 ---
