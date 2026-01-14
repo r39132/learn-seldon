@@ -21,9 +21,6 @@ A production-ready ML project demonstrating three-class sentiment analysis (Posi
 - [Commands](#commands)
 - [Architecture](#architecture)
 - [Documentation](#documentation)
-
-## Overview
-
 This project demonstrates:
 - **Model Training**: Scikit-learn pipeline with TF-IDF vectorization
 - **Model Serving**: Seldon Core v1 on Kubernetes with custom Python wrapper
@@ -164,7 +161,7 @@ flowchart TD
 | [SETUP.md](docs/SETUP.md) | Detailed setup instructions |
 | [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | Common issues and solutions |
 | [ARCHITECTURE.md](docs/ARCHITECTURE.md) | System design and architecture |
-| [CONTRIBUTING.md](docs/CONTRIBUTING.md) | Contribution guidelines |
+
 
 ---
 
