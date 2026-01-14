@@ -130,6 +130,7 @@ Refer to [ARCHITECTURE.md](docs/ARCHITECTURE.md)
 |----------|-------------|
 | [SETUP.md](docs/SETUP.md) | Detailed setup instructions |
 | [QUICKSTART.md](docs/QUICKSTART.md) | Get started in 5 minutes |
+| [COMMANDS.md](docs/COMMANDS.md) | Complete command reference |
 | [ARCHITECTURE.md](docs/ARCHITECTURE.md) | System design and architecture |
 | [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | Common issues and solutions |
 

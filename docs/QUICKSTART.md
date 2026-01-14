@@ -11,7 +11,6 @@ Get up and running with the Sentiment Analyzer in minutes.
 - [Step 4: Test the Model Server](#step-4-test-the-model-server)
 - [Step 5: Run the UI](#step-5-run-the-ui)
 - [Step 6: View Logs and Monitor](#step-6-view-logs-and-monitor)
-- [Common Commands](#common-commands)
 - [Clean Up](#clean-up)
 
 ## Prerequisites
@@ -200,36 +199,8 @@ kubectl get seldondeployments -n seldon
 kubectl describe pod -l seldon-deployment-id=sentiment-classifier -n seldon
 ```
 
-## Common Commands
 
-### Development
-
-```bash
-make data                      # Generate training data
-make train                     # Train model
-make notebook                  # Start Jupyter notebook
-make clean-build-artifacts     # Clean Python caches
-```
-
-### Kubernetes
-
-```bash
-make k8s-deploy-model-server   # Deploy model to K8s
-make k8s-ms-status             # Check status
-make k8s-ms-logs               # Stream logs
-make k8s-ms-port-fwd           # Port forward service to localhost:8080
-make k8s-ms-test               # Run tests against model server
-make k8s-clean                 # Delete all K8s resources
-```
-
-### Local UI
-
-```bash
-make run-ui                    # Start UI server
-make stop-ui                   # Stop UI server
-```
-
-## Clean Up
+## Step 7: Clean Up
 
 When you're done:
 
@@ -243,3 +214,5 @@ minikube stop
 # Clean build artifacts
 make clean-build-artifacts
 ```
+
+For a complete list of available commands, see [COMMANDS.md](COMMANDS.md).
