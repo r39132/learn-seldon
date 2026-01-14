@@ -10,7 +10,7 @@
 - [Resource Requirements](#resource-requirements)
 - [Scaling Considerations](#scaling-considerations)
 - [Security](#security)
-- [Monitoring & Observability](#monitoring--observability)
+
 
 ## System Architecture
 
@@ -21,7 +21,7 @@
 graph TB
     subgraph LocalMachine["Local Machine"]
         Browser["Web Browser<br/>http://localhost:8000"]
-        WebUI["Web UI Server<br/>Port 8000<br/>(runs locally)<br/><br/>Endpoints:<br/>GET / → Render UI<br/>POST /analyze → Sentiment<br/>GET /health → Health"]
+        WebUI["sentiment_app_server<br/>Port 8000<br/>(runs locally)<br/><br/>Endpoints:<br/>GET / → Render UI<br/>POST /analyze → Sentiment<br/>GET /health → Health"]
     end
 
     subgraph K8sCluster["Kubernetes Cluster (Minikube)"]
@@ -47,7 +47,7 @@ graph TB
 ```mermaid
 %%{init: {'theme':'neutral'}}%%
 graph TB
-    LocalUI["Web UI Server<br/>localhost:8000<br/>(outside cluster)"] -.->|Port Forward<br/>localhost:8080| ClassifierSvc
+    LocalUI["sentiment_app_server<br/>localhost:8000<br/>(outside cluster)"] -.->|Port Forward<br/>localhost:8080| ClassifierSvc
 
     subgraph MinikubeCluster["Minikube Cluster"]
         subgraph SeldonNS["Namespace: seldon"]
@@ -90,12 +90,12 @@ flowchart TD
 %%{init: {'theme':'neutral'}}%%
 flowchart TD
     UserInput["User Input<br/>Browser: localhost:8000<br/>Enter text..."]
-    WebUI["Web UI (Local)<br/>POST /analyze<br/><br/>1. Receive text<br/>2. Format Seldon request<br/>3. Call localhost:8080"]
+    WebUI["sentiment_app_server<br/>POST /analyze<br/><br/>1. Receive text<br/>2. Format Seldon request<br/>3. Call localhost:8080"]
     PortFwd["Port Forward<br/>localhost:8080 → K8s"]
     SeldonServer["Seldon Server (K8s)<br/><br/>1. Receive request<br/>2. Extract ndarray<br/>3. Call predict()"]
     MLPipeline["ML Pipeline<br/><br/>1. TF-IDF vectorize<br/>2. LogReg predict<br/>3. Return label + prob"]
     Response["Seldon Response<br/>{data: {names: ['t:0','t:1'],<br/>ndarray: [['positive', 0.95]]}}"]
-    WebUIResponse["Web UI renders HTML<br/>with sentiment result"]
+    WebUIResponse["sentiment_app_server<br/>renders HTML<br/>with sentiment result"]
     UserSees["Browser displays<br/>😊 Positive (95%)"]
 
     UserInput -->|HTTP POST| WebUI
@@ -142,7 +142,7 @@ sequenceDiagram
 sequenceDiagram
     actor User
     participant Browser
-    participant WebUI as Web UI Server<br/>(localhost:8000)
+    participant WebUI as sentiment_app_server<br/>(localhost:8000)
     participant PortFwd as Port Forward<br/>(localhost:8080)
     participant K8s as Kubernetes
     participant Seldon as Seldon Server<br/>(Pod)
@@ -174,8 +174,9 @@ sequenceDiagram
 
 ## Component Details
 
-### Web UI Server (Local)
+### Sentiment Analysis Application (sentiment_app)
 
+**Runtime Component:** `sentiment_app_server` (local process)
 **File:** `src/sentiment_app_server.py`
 **Implementation:** FastAPI
 
@@ -280,7 +281,7 @@ sequenceDiagram
 - Memory: 256Mi request, 512Mi limit
 - Defined in: k8s/seldon-deployment.yaml
 
-**Local Web UI Server:**
+**sentiment_app_server (Local):**
 - Runs outside cluster (no K8s resources)
 - Minimal overhead (~50-100MB RAM)
 
@@ -300,7 +301,7 @@ Then apply:
 make k8s-deploy-model-server
 ```
 
-**Note:** The Web UI Server runs locally and is not deployed to K8s, so it doesn't scale horizontally in the cluster.
+**Note:** The sentiment_app_server runs locally and is not deployed to K8s, so it doesn't scale horizontally in the cluster.
 
 ### Performance
 
@@ -324,33 +325,3 @@ make k8s-deploy-model-server
 - ✅ Health checks enabled
 - ✅ Non-root containers
 - ✅ Read-only file systems (where applicable)
-
-### Future Enhancements
-- [ ] Authentication/Authorization
-- [ ] Rate limiting
-- [ ] TLS/SSL encryption
-- [ ] Network policies
-- [ ] Secret management
-- [ ] RBAC policies
-
-## Monitoring & Observability
-
-### Current Implementation
-- Health check endpoints
-- Container logs
-- Resource metrics
-
-### Recommended Additions
-- [ ] Prometheus metrics
-- [ ] Grafana dashboards
-- [ ] Distributed tracing
-- [ ] Log aggregation (ELK stack)
-- [ ] Model performance monitoring
-- [ ] Alerting (PagerDuty, Slack)
-
----
-
-**For more details, see:**
-- README.md - General documentation
-- QUICKSTART.md - Getting started guide
-- PROJECT_SUMMARY.md - Project overview
